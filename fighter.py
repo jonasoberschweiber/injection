@@ -19,7 +19,8 @@ class Fighter(pygame.sprite.Sprite):
         for platform in self.world.platforms:
             platform_rect = pygame.Rect(platform[0][0], platform[0][1],
                                         platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
-            if not self.rect.colliderect(platform_rect):
+            #if not self.rect.colliderect(platform_rect):
+            if not util.collide_line_top(self.rect, platform):
                 dy = min(dy, abs(self.rect.bottom - platform[0][1]))
             else:
                 dy = 0
