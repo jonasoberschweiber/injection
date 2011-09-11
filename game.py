@@ -18,16 +18,19 @@ class Game:
 
     def ev_keydown(self, e):
         if e.unicode == 'd':
-            self.world.offset = (self.world.offset[0] + 10, self.world.offset[1])
+            #self.world.offset = (self.world.offset[0] + 10, self.world.offset[1])
         elif e.unicode == 'a':
-            self.world.offset = (self.world.offset[0] - 10, self.world.offset[1])
+            #self.world.offset = (self.world.offset[0] - 10, self.world.offset[1])
         elif e.unicode == 'j':
             self.fighter1.punch()
         elif e.unicode == 'q':
             sys.exit()
 
     def ev_keyup(self, e):
-        pass
+        if e.unicode == 'a':
+            pass
+        elif e.unicode == 'd':
+            pass
 
     def main_loop(self):
         while True:
