@@ -4,7 +4,7 @@ class World:
     def __init__(self, bgfile):
         self.background = pygame.image.load(bgfile)
         self.offset = (0, 0)
-        self.platforms = [((0, 600), (1000, 600))]
+        self.platforms = [((0, 675), (1000, 660))]
 
     def render(self, surface):
         area = self.background.get_rect()

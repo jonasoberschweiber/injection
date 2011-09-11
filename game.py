@@ -28,10 +28,6 @@ class Game:
         pass
 
     def main_loop(self):
-        step_size = 20
-        max_frame_time = 100
-
-        now = pygame.time.get_ticks()
         while True:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
@@ -41,19 +37,10 @@ class Game:
                 elif e.type == pygame.KEYUP:
                     self.ev_keyup(e)
 
-            T = pygame.time.get_ticks()
-
-            if (T - now) > max_frame_time:
-                now = T - step_size
-
-            while (T - now) >= step_size:
-                self.fighter1.update()
-                self.surface.fill((0, 0, 0))
-                self.world.render(self.surface)
-                self.fighter1.render(self.surface)
-                now += step_size
-            else:
-                pygame.time.wait(10)
+            self.fighter1.update()
+            self.surface.fill((0, 0, 0))
+            self.world.render(self.surface)
+            self.fighter1.render(self.surface)
 
             pygame.display.flip()
 
