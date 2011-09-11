@@ -17,7 +17,16 @@ class SpriteMap:
 		sprite = self.properties['sprites'][name]
 		x = sprite['index'] % SPRITES_PER_ROW * self.width
 		y = sprite['index'] / SPRITES_PER_ROW * self.height
-		return (x, y, self.width, self.height)
+		width = self.width
+		if sprite.has_key('oversize') and sprite['oversize']:
+			width += self.width
+		return (x, y, width, self.height)
 
-	def  image(self):
+	def image(self):
 		return self.map
+
+	def offset(self, name):
+		sprite = self.properties['sprites'][name]
+		if sprite.has_key('offset'):
+			return sprite['offset']
+		return 0

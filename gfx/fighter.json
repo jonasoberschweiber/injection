@@ -6,6 +6,6 @@
 		"punch02": { "file": "gfx/punch02.png", "index": 2 },
 		"punch03": { "file": "gfx/punch03.png", "index": 3 },
 		"kick02": { "file": "gfx/kick02.png", "index": 4 },
-		"kick03": { "file": "gfx/kick03.png", "index": 5 }
+		"kick03": { "file": "gfx/kick03.png", "index": 5, "offset": 30, "oversize": true }
 	}
 }
