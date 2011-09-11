@@ -18,7 +18,11 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
 
     def render(self, surface):
-        surface.blit(self.sprite_map.image(), self.rect, area=self.sprite_map.sprite_rect(self.sprite))
+        off = self.sprite_map.offset(self.sprite)
+        rect = self.rect
+        if off > 0:
+            rect = pygame.Rect(rect.x - off, rect.y, rect.w + off, rect.h)
+        surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
 
     def update(self):
         dy = 60 
