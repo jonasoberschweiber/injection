@@ -16,6 +16,7 @@ for name, props in sprite_data['sprites'].items():
 	x = props['index'] % SPRITES_PER_ROW * SPRITE_WIDTH
 	y = props['index'] / SPRITES_PER_ROW * SPRITE_HEIGHT
 	sprite_img = Image.open(props['file'])
+	y += SPRITE_HEIGHT - sprite_img.size[1]
 	outimage.paste(sprite_img, (x, y))
 
 outimage.save(sprite_data['map'], 'PNG')
