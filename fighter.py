@@ -13,6 +13,7 @@ class Fighter(pygame.sprite.Sprite):
         self.sprite = 'still'
 
         self.punching = False
+        self.kicking = False
         self.anim_frame = 0
 
     def render(self, surface):
@@ -38,9 +39,22 @@ class Fighter(pygame.sprite.Sprite):
             elif self.anim_frame >= 6:
                 self.sprite = 'still'
                 self.punching = False
+
+        if self.kicking:
+            if self.anim_frame == 0:
+                self.sprite = 'kick02'
+            elif self.anim_frame == 3:
+                self.sprite = 'kick03'
+            elif self.anim_frame >= 8:
+                self.sprite = 'still'
+                self.kicking = False
         
         self.anim_frame += 1
 
     def punch(self):
         self.punching = True
+        self.anim_frame = 0
+    
+    def kick(self):
+        self.kicking = True
         self.anim_frame = 0
