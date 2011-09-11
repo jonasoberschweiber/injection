@@ -21,6 +21,8 @@ class Game:
             self.world.offset = (self.world.offset[0] + 10, self.world.offset[1])
         elif e.unicode == 'a':
             self.world.offset = (self.world.offset[0] - 10, self.world.offset[1])
+        elif e.unicode == 'j':
+            self.fighter1.punch()
         elif e.unicode == 'q':
             sys.exit()
 
