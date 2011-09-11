@@ -1,13 +1,17 @@
 import sys
 import pygame
-import world
+from world import World
+from fighter import Fighter
 
 class Game:
     def __init__(self):
         pygame.init()
+        pygame.display.set_caption("Injection")
         pygame.key.set_repeat(300, 30)
-        self.surface = pygame.display.set_mode((1024, 768), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.world = world.World("gfx/bg01.png")
+        self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.world = World("gfx/bg01.png")
+        self.fighter1 = Fighter(self.world)
+        self.fighter2 = Fighter(self.world)
 
     def ev_quit(self, e):
         pass
@@ -43,8 +47,10 @@ class Game:
                 now = T - step_size
 
             while (T - now) >= step_size:
+                self.fighter1.update()
                 self.surface.fill((0, 0, 0))
                 self.world.render(self.surface)
+                self.fighter1.render(self.surface)
                 now += step_size
             else:
                 pygame.time.wait(10)
