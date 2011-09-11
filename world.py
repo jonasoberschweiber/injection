@@ -32,3 +32,11 @@ class World:
         if real_x > 0 and real_x + 200 < self.background.get_rect().width:
             return True
         return False
+
+    def collides_opponent(self, caller, hit_boxes):
+        opponent = self.fighter2
+        if opponent == caller:
+            opponent = self.fighter1
+        
+        opponent_hit_boxes = opponent.hit_boxes()
+        return any([x.collidelist(opponent_hit_boxes) != -1 for x in hit_boxes])

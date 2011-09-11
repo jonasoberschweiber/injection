@@ -12,6 +12,12 @@ class SpriteMap:
 			self.map = filter(pygame.image.load(self.properties['map']))
 		else:
 			self.map = pygame.image.load(self.properties['map'])
+		self.build_masks()
+
+	def build_masks(self):
+		self.masks = {}
+		for name in self.properties['sprites']:
+			self.masks[name] = pygame.mask.from_surface(self.map.subsurface(self.sprite_rect(name)))
 
 	def sprite_rect(self, name):
 		sprite = self.properties['sprites'][name]
@@ -30,3 +36,6 @@ class SpriteMap:
 		if sprite.has_key('offset'):
 			return sprite['offset']
 		return 0
+	
+	def mask(self, name):
+		return self.masks[name]

@@ -24,6 +24,15 @@ class Fighter(pygame.sprite.Sprite):
             rect = pygame.Rect(rect.x - off, rect.y, rect.w + off, rect.h)
         surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
 
+    def mask(self):
+        return self.sprite_map.mask(self.sprite)
+    
+    def _hit_boxes(self, rect):
+        return [x.move(rect.x, rect.y) for x in self.mask().get_bounding_rects()]
+    
+    def hit_boxes(self):
+        return self._hit_boxes(self.rect)
+
     def update(self):
         dy = 60 
         for platform in self.world.platforms:
@@ -35,7 +44,6 @@ class Fighter(pygame.sprite.Sprite):
                 dy = 0
         self.rect = self.rect.move(0, dy)
 
-        print self.speed[0], self.anim_frame
         if self.speed[0] != 0 and not self.punching and not self.kicking:
             if self.anim_frame >= 4:
                 self.sprite = 'walk01'
@@ -75,6 +83,8 @@ class Fighter(pygame.sprite.Sprite):
 
     def move(self, v):
         new_rect = self.rect.move(v)
+        if self.world.collides_opponent(self, self._hit_boxes(new_rect)):
+            return False
         if self.world.contains_point((new_rect.left, new_rect.top)):
             if new_rect.left < 0 or new_rect.right > 1024:
                 if not self.world.scroll(v[0]):
