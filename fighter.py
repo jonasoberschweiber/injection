@@ -15,9 +15,12 @@ class Fighter(pygame.sprite.Sprite):
         surface.blit(self.sprite_map.image(), self.rect, area=self.sprite_map.sprite_rect('still'))
 
     def update(self):
+        dy = 60 
         for platform in self.world.platforms:
             platform_rect = pygame.Rect(platform[0][0], platform[0][1],
                                         platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
-            
             if not self.rect.colliderect(platform_rect):
-                self.rect = self.rect.move(0, 1)
+                dy = min(dy, abs(self.rect.bottom - platform[0][1]))
+            else:
+                dy = 0
+        self.rect = self.rect.move(0, dy)
