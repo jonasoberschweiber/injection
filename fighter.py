@@ -8,7 +8,7 @@ class Fighter(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.world = world
         self.color = pygame.Color(200, 0, 0, 255)
-        self.sprite_map = SpriteMap('gfx/fighter.json')
+        self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
         self.rect = pygame.Rect(0, 0, 128, 256)
         self.sprite = 'still'
 
