@@ -1,16 +1,18 @@
 import pygame
 import util
 
+from spritemap import SpriteMap
+
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, world):
         pygame.sprite.Sprite.__init__(self)
         self.world = world
         self.color = pygame.Color(200, 0, 0, 255)
-        self.image = util.colorize_image(pygame.image.load("gfx/still01.png"), self.color)
-        self.rect = self.image.get_rect()
+        self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
+        self.rect = pygame.Rect(0, 0, 128, 256)
 
     def render(self, surface):
-        surface.blit(self.image, self.rect)
+        surface.blit(self.sprite_map.image(), self.rect, area=self.sprite_map.sprite_rect('still'))
 
     def update(self):
         for platform in self.world.platforms:

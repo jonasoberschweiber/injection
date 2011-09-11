@@ -1,7 +1,7 @@
 {
-	"map": "fighter.png",
+	"map": "gfx/fighter.png",
 	"sprites": {
-		"still": { "file": "still01.png", "index": 0 },
-		"walk01": { "file": "walk01.png", "index": 1 }
+		"still": { "file": "gfx/still01.png", "index": 0 },
+		"walk01": { "file": "gfx/walk01.png", "index": 1 }
 	}
 }
