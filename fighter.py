@@ -11,6 +11,7 @@ class Fighter(pygame.sprite.Sprite):
         self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
         self.rect = pygame.Rect(0, 0, 128, 256)
         self.sprite = 'still'
+        self.speed = [0, 0]
 
         self.punching = False
         self.kicking = False
@@ -24,12 +25,13 @@ class Fighter(pygame.sprite.Sprite):
         for platform in self.world.platforms:
             platform_rect = pygame.Rect(platform[0][0], platform[0][1],
                                         platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
-            #if not self.rect.colliderect(platform_rect):
             if not util.collide_line_top(self.rect, platform):
                 dy = min(dy, abs(self.rect.bottom - platform[0][1]))
             else:
                 dy = 0
         self.rect = self.rect.move(0, dy)
+
+        self.move(self.speed)
 
         if self.punching:
             if self.anim_frame == 0:
@@ -58,3 +60,12 @@ class Fighter(pygame.sprite.Sprite):
     def kick(self):
         self.kicking = True
         self.anim_frame = 0
+
+    def move(self, v):
+        new_rect = self.rect.move(v)
+        if self.world.contains_point((new_rect.left, new_rect.top)):
+            if new_rect.left < 0 or new_rect.right > 1024:
+                if not self.world.scroll(v[0]):
+                    return False
+            self.rect = self.rect.move(v)
+            return True
