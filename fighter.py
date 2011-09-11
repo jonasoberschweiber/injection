@@ -1,7 +1,11 @@
+import math
 import pygame
 import util
 
 from spritemap import SpriteMap
+
+JUMP_SPEED = -100
+JUMP_DURATION = 15
 
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, world):
@@ -11,11 +15,13 @@ class Fighter(pygame.sprite.Sprite):
         self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
         self.rect = pygame.Rect(0, 0, 128, 256)
         self.sprite = 'still'
-        self.speed = [0, 0]
+        self.speed_x = 0
+        self.speed_y = 0
 
         self.punching = False
         self.kicking = False
         self.anim_frame = 0
+        self.jump_frame = 0
 
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
@@ -34,7 +40,7 @@ class Fighter(pygame.sprite.Sprite):
         return self._hit_boxes(self.rect)
 
     def update(self):
-        dy = 60 
+        dy = 60
         for platform in self.world.platforms:
             platform_rect = pygame.Rect(platform[0][0], platform[0][1],
                                         platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
@@ -42,16 +48,17 @@ class Fighter(pygame.sprite.Sprite):
                 dy = min(dy, abs(self.rect.bottom - platform[0][1]))
             else:
                 dy = 0
+        dy += JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION))
         self.rect = self.rect.move(0, dy)
 
-        if self.speed[0] != 0 and not self.punching and not self.kicking:
+        if self.speed_x != 0 and not self.punching and not self.kicking:
             if self.anim_frame >= 4:
                 self.sprite = 'walk01'
             if self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.anim_frame = 0
 
-        self.move(self.speed)
+        self.move_x(self.speed_x)
 
         if self.punching:
             if self.anim_frame == 0:
@@ -72,6 +79,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.kicking = False
         
         self.anim_frame += 1
+        self.jump_frame += 1
 
     def punch(self):
         self.punching = True
@@ -82,16 +90,16 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
 
     def jump(self):
-        self.jumping = True
-        self.speed[1] = 20
+        if self.jump_frame > JUMP_DURATION:
+            self.jump_frame = 1
 
-    def move(self, v):
-        new_rect = self.rect.move(v)
+    def move_x(self, v):
+        new_rect = self.rect.move(v, 0)
         if self.world.collides_opponent(self, self._hit_boxes(new_rect)):
             return False
         if self.world.contains_point((new_rect.left, new_rect.top)):
             if new_rect.left < 0 or new_rect.right > 1024:
                 if not self.world.scroll(v[0]):
                     return False
-            self.rect = self.rect.move(v)
+            self.rect = new_rect
             return True

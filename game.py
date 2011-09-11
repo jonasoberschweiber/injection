@@ -20,13 +20,13 @@ class Game:
 
     def ev_keydown(self, e):
         if e.unicode == 'd':
-            self.fighter1.speed[0] += 15
+            self.fighter1.speed_x += 15
             pass
         elif e.unicode == 'a':
-            self.fighter1.speed[0] -= 15
+            self.fighter1.speed_x -= 15
             pass
         elif e.unicode == 'w':
-            self.figher1.jump()
+            self.fighter1.jump()
         elif e.unicode == 'j':
             self.fighter1.punch()
         elif e.unicode == 'k':
@@ -36,9 +36,9 @@ class Game:
 
     def ev_keyup(self, e):
         if e.key == 97:
-            self.fighter1.speed[0] += 15
+            self.fighter1.speed_x += 15
         elif e.key == 100:
-            self.fighter1.speed[0] -= 15
+            self.fighter1.speed_x -= 15
 
     def main_loop(self):
         while True:
