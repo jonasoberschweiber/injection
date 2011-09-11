@@ -20,4 +20,4 @@ class Fighter(pygame.sprite.Sprite):
                                         platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
             
             if not self.rect.colliderect(platform_rect):
-                self.rect = self.rect.move(0, 10)
+                self.rect = self.rect.move(0, 1)
