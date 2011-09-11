@@ -35,6 +35,14 @@ class Fighter(pygame.sprite.Sprite):
                 dy = 0
         self.rect = self.rect.move(0, dy)
 
+        print self.speed[0], self.anim_frame
+        if self.speed[0] != 0 and not self.punching and not self.kicking:
+            if self.anim_frame >= 4:
+                self.sprite = 'walk01'
+            if self.anim_frame >= 8:
+                self.sprite = 'still'
+                self.anim_frame = 0
+
         self.move(self.speed)
 
         if self.punching:
