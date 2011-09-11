@@ -25,6 +25,8 @@ class Game:
         elif e.unicode == 'a':
             self.fighter1.speed[0] -= 15
             pass
+        elif e.unicode == 'w':
+            self.figher1.jump()
         elif e.unicode == 'j':
             self.fighter1.punch()
         elif e.unicode == 'k':

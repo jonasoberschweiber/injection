@@ -81,6 +81,10 @@ class Fighter(pygame.sprite.Sprite):
         self.kicking = True
         self.anim_frame = 0
 
+    def jump(self):
+        self.jumping = True
+        self.speed[1] = 20
+
     def move(self, v):
         new_rect = self.rect.move(v)
         if self.world.collides_opponent(self, self._hit_boxes(new_rect)):
