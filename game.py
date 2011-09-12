@@ -9,6 +9,7 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Injection")
+        self.clock = pygame.time.Clock()
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.viewport = Viewport(self)
         self.world = World(self, "gfx/world01.json")
@@ -43,12 +44,13 @@ class Game:
 
     def ev_keyup(self, e):
         if e.key == 97:
-            self.f.speed_x += 15
+            self.f.stop_left()
         elif e.key == 100:
-            self.f.speed_x -= 15
+            self.f.stop_right()
 
     def main_loop(self):
         while True:
+            self.clock.tick(30)
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     self.ev_quit(e)

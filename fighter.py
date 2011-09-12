@@ -22,6 +22,8 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_y = 0
         self.looking_right = True
 
+        # speed multiplicator
+        self.speed_multi = 1
         self.health = 100
         self.punching = False
         self.kicking = False
@@ -109,16 +111,22 @@ class Fighter(pygame.sprite.Sprite):
             cb(self.health)
     
     def left(self):
-        self.speed_x -= 15
+        self.speed_x -= 15 * self.speed_multi
         if self.looking_right:
             self.looking_right = False
             self.sprite_map.flip()
     
     def right(self):
-        self.speed_x += 15
+        self.speed_x += 15 * self.speed_multi
         if not self.looking_right:
             self.looking_right = True
             self.sprite_map.flip()
+
+    def stop_left(self):
+        self.speed_x += 15 * self.speed_multi
+
+    def stop_right(self):
+        self.speed_x -= 15 * self.speed_multi
 
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
