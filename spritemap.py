@@ -20,7 +20,7 @@ class SpriteMap:
 		self.masks = {}
 		self.flipped_masks = {}
 		for name in self.properties['sprites']:
-			self.masks[name] = pygame.mask.from_surface(self.map.subsurface(self.sprite_rect(name)))
+			self.masks[name] = pygame.mask.from_surface(self.map.subsurface(self.sprite_rect(name)), 200)
 			self.flipped_masks[name] = pygame.mask.from_surface(self.flipped_map.subsurface(self.sprite_rect(name)))
 	
 	def build_flipped_map(self):
@@ -51,7 +51,9 @@ class SpriteMap:
 	def offset(self, name):
 		sprite = self.properties['sprites'][name]
 		if sprite.has_key('offset'):
-			return sprite['offset']
+			if self.flipped:
+				return self.width - sprite['offset']
+			return sprite['offset'] 
 		return 0
 	
 	def mask(self, name):

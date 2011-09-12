@@ -31,7 +31,7 @@ class Fighter(pygame.sprite.Sprite):
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
         rect = self.rect
-        if off > 0:
+        if off != 0:
             rect = pygame.Rect(rect.x - off, rect.y, rect.w + off, rect.h)
         surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
 
