@@ -16,15 +16,6 @@ class World:
 
         surface.blit(self.background, (0, 0), area)
 
-    def scroll(self, pixels):
-        if (self.game.fighter1.rect.left - pixels < 0 or self.game.fighter1.rect.right - pixels > 1024)\
-           or (self.game.fighter2.rect.left - pixels < 0 or self.game.fighter2.rect.right - pixels > 1024):
-            return False
-        self.offset = (self.offset[0] + pixels, self.offset[1])
-        self.game.fighter1.rect.left -= pixels
-        self.game.fighter2.rect.left -= pixels
-        return True
-
     def obstacles(self, caller):
         obstacles = list(self.platforms)
         opp = self.opponent(caller);
