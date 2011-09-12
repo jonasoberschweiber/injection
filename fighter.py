@@ -11,10 +11,10 @@ KICK_DAMAGE = 10
 PUNCH_DAMAGE = 5
 
 class Fighter(pygame.sprite.Sprite):
-    def __init__(self, game):
+    def __init__(self, game, color):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.color = pygame.Color(200, 0, 0, 255)
+        self.color = color
         self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
         self.rect = pygame.Rect(0, 0, 128, 256)
         self.sprite = 'still'
@@ -27,6 +27,7 @@ class Fighter(pygame.sprite.Sprite):
         self.kicking = False
         self.anim_frame = 0
         self.jump_frame = 0
+        self.damage_callbacks = []
 
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
@@ -100,6 +101,8 @@ class Fighter(pygame.sprite.Sprite):
     
     def take_damage(self, dmg):
         self.health -= dmg
+        for cb in self.damage_callbacks:
+            cb(self.health)
     
     def left(self):
         self.speed_x -= 15

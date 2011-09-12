@@ -3,6 +3,7 @@ import pygame
 from world import World
 from viewport import Viewport
 from fighter import Fighter
+from pointsbar import PointsBar
 
 class Game:
     def __init__(self):
@@ -11,9 +12,11 @@ class Game:
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.viewport = Viewport(self)
         self.world = World(self, "gfx/world01.json")
-        self.fighter1 = Fighter(self)
-        self.fighter2 = Fighter(self)
+        self.fighter1 = Fighter(self, pygame.Color(200, 0, 0, 255))
+        self.fighter2 = Fighter(self, pygame.Color(0, 0, 200, 255))
         self.fighter2.rect.left = 800
+        self.pointsbar1 = PointsBar(self.fighter1, pygame.Rect(20, 20, 250, 30), pygame.Color(200, 0, 0, 255))
+        self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(750, 20, 250, 30), pygame.Color(0, 0, 200, 255))
 
         self.f = self.fighter1
     def ev_quit(self, e):
@@ -60,6 +63,8 @@ class Game:
             self.world.render(self.surface)
             self.fighter1.render(self.surface)
             self.fighter2.render(self.surface)
+            self.pointsbar1.render(self.surface)
+            self.pointsbar2.render(self.surface)
 
             pygame.display.flip()
 
