@@ -48,8 +48,15 @@ class Fighter(pygame.sprite.Sprite):
                 dy = min(dy, abs(self.rect.bottom - platform[0][1]))
             else:
                 dy = 0
-        dy += JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION))
-        self.rect = self.rect.move(0, dy)
+        dy += math.trunc(JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION)))
+        new_rect = self.rect.move(self.speed_x, dy)
+
+        if (not self.world.collides_opponent(self, self._hit_boxes(new_rect))
+            and self.world.contains_point((new_rect.left, new_rect.top))):
+            if new_rect.left < 0 or new_rect.right > 1024:
+                self.world.scroll(self.speed_x)
+                new_rect.left -= self.speed_x
+            self.rect = new_rect
 
         if self.speed_x != 0 and not self.punching and not self.kicking:
             if self.anim_frame >= 4:
@@ -57,8 +64,6 @@ class Fighter(pygame.sprite.Sprite):
             if self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.anim_frame = 0
-
-        self.move_x(self.speed_x)
 
         if self.punching:
             if self.anim_frame == 0:
@@ -92,14 +97,3 @@ class Fighter(pygame.sprite.Sprite):
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
             self.jump_frame = 1
-
-    def move_x(self, v):
-        new_rect = self.rect.move(v, 0)
-        if self.world.collides_opponent(self, self._hit_boxes(new_rect)):
-            return False
-        if self.world.contains_point((new_rect.left, new_rect.top)):
-            if new_rect.left < 0 or new_rect.right > 1024:
-                if not self.world.scroll(v[0]):
-                    return False
-            self.rect = new_rect
-            return True
