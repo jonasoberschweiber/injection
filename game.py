@@ -20,11 +20,9 @@ class Game:
 
     def ev_keydown(self, e):
         if e.unicode == 'd':
-            self.fighter1.speed_x += 15
-            pass
+            self.fighter1.right()
         elif e.unicode == 'a':
-            self.fighter1.speed_x -= 15
-            pass
+            self.fighter1.left()
         elif e.unicode == 'w':
             self.fighter1.jump()
         elif e.unicode == 'j':

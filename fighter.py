@@ -20,6 +20,7 @@ class Fighter(pygame.sprite.Sprite):
         self.sprite = 'still'
         self.speed_x = 0
         self.speed_y = 0
+        self.looking_right = True
 
         self.health = 100
         self.punching = False
@@ -102,6 +103,18 @@ class Fighter(pygame.sprite.Sprite):
     
     def take_damage(self, dmg):
         self.health -= dmg
+    
+    def left(self):
+        self.speed_x -= 15
+        if self.looking_right:
+            self.looking_right = False
+            self.sprite_map.flip()
+    
+    def right(self):
+        self.speed_x += 15
+        if not self.looking_right:
+            self.looking_right = True
+            self.sprite_map.flip()
 
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
