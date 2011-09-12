@@ -55,8 +55,6 @@ class SpriteMap:
 		return 0
 	
 	def mask(self, name):
-		if self.flipped:
-			return self.flipped_masks[name]
 		return self.masks[name]
 	
 	def flip(self):
