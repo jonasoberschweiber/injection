@@ -4,6 +4,8 @@ import util
 
 from spritemap import SpriteMap
 
+import mutation
+
 JUMP_SPEED = -100
 JUMP_DURATION = 15
 
@@ -30,6 +32,15 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
         self.jump_frame = 0
         self.damage_callbacks = []
+
+        self.injections = [(mutation.FiftyPercentMoreSpeedMutation(), None, None),
+                           (mutation.HundredPercentMoreSpeedMutation(), None, None)]
+        self.current_injection = 0
+
+        # holds the speed to be subtracted when the user lifts the 'left' or 'right'
+        # button
+        self.speed_reset_l = 0
+        self.speed_reset_r = 0
 
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
@@ -112,22 +123,33 @@ class Fighter(pygame.sprite.Sprite):
     
     def left(self):
         self.speed_x -= 15 * self.speed_multi
+        self.speed_reset_l = -15 * self.speed_multi
         if self.looking_right:
             self.looking_right = False
             self.sprite_map.flip()
     
     def right(self):
         self.speed_x += 15 * self.speed_multi
+        self.speed_reset_r = 15 * self.speed_multi
         if not self.looking_right:
             self.looking_right = True
             self.sprite_map.flip()
 
     def stop_left(self):
-        self.speed_x += 15 * self.speed_multi
+        self.speed_x -= self.speed_reset_l
 
     def stop_right(self):
-        self.speed_x -= 15 * self.speed_multi
+        self.speed_x -= self.speed_reset_r
 
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
             self.jump_frame = 1
+
+    def switch_to_injection(self, number):
+        for m in self.injections[self.current_injection]:
+            if m != None:
+                m.deactivated(self)
+        for m in self.injections[number]:
+            if m != None:
+                m.activated(self)
+        self.current_injection = number

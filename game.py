@@ -34,6 +34,10 @@ class Game:
             self.f.punch()
         elif e.unicode == 'k':
             self.f.kick()
+        elif e.unicode == '1':
+            self.f.switch_to_injection(0)
+        elif e.unicode == '2':
+            self.f.switch_to_injection(1)
         elif e.unicode == 's':
             if self.f == self.fighter1:
                 self.f = self.fighter2
