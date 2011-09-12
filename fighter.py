@@ -101,7 +101,7 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
     
     def take_damage(self, dmg):
-        health -= dmg
+        self.health -= dmg
 
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
