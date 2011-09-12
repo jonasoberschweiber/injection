@@ -25,6 +25,16 @@ class World:
         self.game.fighter2.rect.left -= pixels
         return True
 
+    def obstacles(self, caller):
+        obstacles = list(self.platforms)
+        opp = self.opponent(caller);
+        hb = opp.hit_boxes()
+        t = max([x.top for x in hb])
+        l = min([x.left for x in hb])
+        r = max([x.right for x in hb])
+        obstacles.append(((l, t), (r, t)))
+        return obstacles
+
     def contains_point(self, point):
         real_x = point[0] + self.offset[0]
         real_y = point[1] + self.offset[1]
@@ -49,4 +59,10 @@ class World:
         opponent = self.opponent(caller)
         
         opponent_hit_boxes = opponent.hit_boxes()
-        return any([x.collidelist(opponent_hit_boxes) != -1 for x in hit_boxes])
+        a = False
+        for b1 in hit_boxes:
+            for b2 in opponent_hit_boxes:
+                a = (((b1.left >= b2.left and b1.left <= b2.right)
+                        or (b1.right >= b2.left and b1.right <= b2.right))
+                    and ((b1.top <= b2.bottom and b1.bottom >= b2.top)))
+        return a
