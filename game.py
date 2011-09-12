@@ -1,6 +1,7 @@
 import sys
 import pygame
 from world import World
+from viewport import Viewport
 from fighter import Fighter
 
 class Game:
@@ -8,35 +9,40 @@ class Game:
         pygame.init()
         pygame.display.set_caption("Injection")
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.world = World("gfx/world01.json")
-        self.fighter1 = Fighter(self.world)
-        self.fighter2 = Fighter(self.world)
-        self.fighter2.rect.left = 400
-        self.world.fighter1 = self.fighter1
-        self.world.fighter2 = self.fighter2
+        self.viewport = Viewport(self)
+        self.world = World(self, "gfx/world01.json")
+        self.fighter1 = Fighter(self)
+        self.fighter2 = Fighter(self)
+        self.fighter2.rect.left = 800
 
+        self.f = self.fighter1
     def ev_quit(self, e):
         pass
 
     def ev_keydown(self, e):
         if e.unicode == 'd':
-            self.fighter1.right()
+            self.f.right()
         elif e.unicode == 'a':
-            self.fighter1.left()
+            self.f.left()
         elif e.unicode == 'w':
-            self.fighter1.jump()
+            self.f.jump()
         elif e.unicode == 'j':
-            self.fighter1.punch()
+            self.f.punch()
         elif e.unicode == 'k':
-            self.fighter1.kick()
+            self.f.kick()
+        elif e.unicode == 's':
+            if self.f == self.fighter1:
+                self.f = self.fighter2
+            else:
+                self.f = self.fighter1
         elif e.unicode == 'q':
             sys.exit()
 
     def ev_keyup(self, e):
         if e.key == 97:
-            self.fighter1.speed_x += 15
+            self.f.speed_x += 15
         elif e.key == 100:
-            self.fighter1.speed_x -= 15
+            self.f.speed_x -= 15
 
     def main_loop(self):
         while True:
