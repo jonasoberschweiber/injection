@@ -17,13 +17,7 @@ class World:
         surface.blit(self.background, (0, 0), area)
 
     def obstacles(self, caller):
-        obstacles = list(self.platforms)
-        opp = self.opponent(caller);
-        hb = opp.hit_boxes()
-        t = max([x.top for x in hb])
-        l = min([x.left for x in hb])
-        r = max([x.right for x in hb])
-        obstacles.append(((l, t), (r, t)))
+        obstacles = self.platforms
         return obstacles
 
     def contains_point(self, point):
@@ -43,8 +37,11 @@ class World:
     def hit_opponent(self, caller, damage):
         opp = self.opponent(caller)
         opp_hb = opp.hit_boxes()
+        direction = 1
+        if caller.looking_right:
+            direction = -1
         if any([x.collidelist(opp_hb) != -1 for x in caller.hit_boxes()]):
-            opp.take_damage(damage)
+            opp.take_damage(damage, direction)
 
     def collides_opponent(self, caller, hit_boxes):
         opponent = self.opponent(caller)

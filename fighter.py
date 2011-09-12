@@ -42,6 +42,9 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_reset_l = 0
         self.speed_reset_r = 0
 
+        # holds pushback amount
+        self.pushback = 0
+
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
         rect = self.game.viewport.real_rect(self.rect)
@@ -67,10 +70,12 @@ class Fighter(pygame.sprite.Sprite):
             else:
                 dy = 0
         dy += math.trunc(JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION)))
-        new_rect = self.rect.move(self.speed_x, dy)
+        new_rect = self.rect.move(self.speed_x - self.pushback, dy)
+        if self.pushback != 0:
+            self.pushback = 0
 
-        if not self.game.viewport.can_move(self):
-            new_rect.left -= self.speed_x
+        if not self.game.viewport.can_move(self, new_rect):
+            new_rect.left = self.rect.left
         self.rect = new_rect
 
         if self.speed_x != 0 and not self.punching and not self.kicking:
@@ -111,10 +116,12 @@ class Fighter(pygame.sprite.Sprite):
         self.kicking = True
         self.anim_frame = 0
     
-    def take_damage(self, dmg):
+    def take_damage(self, dmg, direction):
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health)
+        # we want a little pushback
+        self.pushback = 15 * direction
     
     def left(self):
         self.speed_x -= 15 * self.speed_multi

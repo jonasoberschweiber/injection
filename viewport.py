@@ -8,9 +8,9 @@ class Viewport:
     def real_rect(self, rect):
         return pygame.Rect(rect.x - self.offset, rect.y, rect.width, rect.height)
 
-    def can_move(self, caller):
+    def can_move(self, caller, new_rect):
         opponent = self.game.world.opponent(caller)
-        new_caller_rect = caller.rect.move(caller.speed_x, 0)
+        new_caller_rect = new_rect
         opp_real_rect = self.real_rect(opponent.rect)
 
         if new_caller_rect.left < 0 or new_caller_rect.right > self.game.world.background.get_rect().width:
