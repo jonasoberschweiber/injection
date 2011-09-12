@@ -33,10 +33,20 @@ class World:
             return True
         return False
 
+    def opponent(self, caller):
+        opp = self.fighter2
+        if opp == caller:
+            opp = self.fighter1
+        return opp
+
+    def hit_opponent(self, caller, damage):
+        opp = self.opponent(caller)
+        opp_hb = opp.hit_boxes()
+        if any([x.collidelist(opp_hb) != -1 for x in caller.hit_boxes()]):
+            opp.take_damage(damage)
+
     def collides_opponent(self, caller, hit_boxes):
-        opponent = self.fighter2
-        if opponent == caller:
-            opponent = self.fighter1
+        opponent = self.opponent(caller)
         
         opponent_hit_boxes = opponent.hit_boxes()
         return any([x.collidelist(opponent_hit_boxes) != -1 for x in hit_boxes])

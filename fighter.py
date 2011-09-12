@@ -7,6 +7,9 @@ from spritemap import SpriteMap
 JUMP_SPEED = -100
 JUMP_DURATION = 15
 
+KICK_DAMAGE = 10
+PUNCH_DAMAGE = 5
+
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, world):
         pygame.sprite.Sprite.__init__(self)
@@ -18,6 +21,7 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_x = 0
         self.speed_y = 0
 
+        self.health = 100
         self.punching = False
         self.kicking = False
         self.anim_frame = 0
@@ -70,6 +74,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'punch02'
             elif self.anim_frame == 2:
                 self.sprite = 'punch03'
+                self.world.hit_opponent(self, PUNCH_DAMAGE)
             elif self.anim_frame >= 6:
                 self.sprite = 'still'
                 self.punching = False
@@ -79,6 +84,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'kick02'
             elif self.anim_frame == 3:
                 self.sprite = 'kick03'
+                self.world.hit_opponent(self, KICK_DAMAGE)
             elif self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.kicking = False
@@ -93,6 +99,9 @@ class Fighter(pygame.sprite.Sprite):
     def kick(self):
         self.kicking = True
         self.anim_frame = 0
+    
+    def take_damage(self, dmg):
+        health -= dmg
 
     def jump(self):
         if self.jump_frame > JUMP_DURATION:
