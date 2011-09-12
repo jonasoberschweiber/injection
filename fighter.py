@@ -46,11 +46,10 @@ class Fighter(pygame.sprite.Sprite):
 
     def update(self):
         dy = 60
-        for platform in self.world.platforms:
-            platform_rect = pygame.Rect(platform[0][0], platform[0][1],
-                                        platform[1][0] - platform[0][0], platform[1][1] - platform[0][1])
+        for platform in self.world.adjusted_platforms():
             if not util.collide_line_top(self.rect, platform):
-                dy = min(dy, abs(self.rect.bottom - platform[0][1]))
+                if self.rect.right > platform[0][0] and self.rect.left < platform[1][0]:
+                    dy = min(dy, abs(self.rect.bottom - platform[0][1]))
             else:
                 dy = 0
         dy += math.trunc(JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION)))

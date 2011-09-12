@@ -8,7 +8,7 @@ class Game:
         pygame.init()
         pygame.display.set_caption("Injection")
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self.world = World("gfx/bg01.png")
+        self.world = World("gfx/world01.json")
         self.fighter1 = Fighter(self.world)
         self.fighter2 = Fighter(self.world)
         self.fighter2.rect.left = 400

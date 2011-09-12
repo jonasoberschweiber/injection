@@ -1,10 +1,13 @@
+import json
+
 import pygame
 
 class World:
-    def __init__(self, bgfile):
-        self.background = pygame.image.load(bgfile)
+    def __init__(self, worldfile):
+        self.data = json.loads(open(worldfile).read())
+        self.background = pygame.image.load(self.data['bg'])
         self.offset = (0, 0)
-        self.platforms = [((0, 675), (1000, 660))]
+        self.platforms = [((x[0], x[1]), (x[2], x[3])) for x in self.data['platforms']]
         self.fighter1 = ""
         self.fighter2 = ""
 
@@ -15,6 +18,8 @@ class World:
 
         surface.blit(self.background, (0, 0), area)
 
+    def adjusted_platforms(self):
+        pass
 
     def scroll(self, pixels):
         if (self.fighter1.rect.left - pixels < 0 or self.fighter1.rect.right - pixels > 1024)\
