@@ -69,11 +69,6 @@ class Fighter(pygame.sprite.Sprite):
         dy += math.trunc(JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION)))
         new_rect = self.rect.move(self.speed_x, dy)
 
-        coll = self.game.world.collides_opponent(self, self._hit_boxes(new_rect))
-
-        if coll:
-            new_rect.left = self.rect.left
-
         if not self.game.viewport.can_move(self):
             new_rect.left -= self.speed_x
         self.rect = new_rect
