@@ -37,11 +37,13 @@ class Fighter(pygame.sprite.Sprite):
         self.kicking = False
         self.anim_frame = 0
         self.jump_frame = 0
+        self.jump_count = 0
+        self.jump_max = 1
         self.damage_callbacks = []
         self.injection_callbacks = []
 
         self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
-                           (mutation.StrengthMutation(), mutation.SwiftFeetMutation(), None), 
+                           (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = 0
 
@@ -115,6 +117,8 @@ class Fighter(pygame.sprite.Sprite):
         
         self.anim_frame += 1
         self.jump_frame += 1
+        if self.jump_frame > JUMP_DURATION:
+            self.jump_count = 0
 
     def punch(self):
         self.punching = True
@@ -156,7 +160,8 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_x -= self.speed_reset_r
 
     def jump(self):
-        if self.jump_frame > JUMP_DURATION:
+        if self.jump_count < self.jump_max:
+            self.jump_count += 1
             self.jump_frame = 1
 
     def switch_to_injection(self, number):
