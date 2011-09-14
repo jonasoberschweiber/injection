@@ -67,11 +67,11 @@ class WingsMutation(Mutation):
         Mutation.__init__(self, "wings")
 
     def activated(self, fighter):
-        pass
+        fighter.jump_max = 2
 
     def deactivated(self, fighter):
-        pass
-
+        fighter.jump_max = 1
+        
 class TranquilityMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "tranquility")
