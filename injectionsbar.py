@@ -7,12 +7,17 @@ class Injection:
         self.separator = pygame.image.load("gfx/mutation_separator.png")
         self.separator_trans = pygame.image.load("gfx/mutation_separator_trans.png")
         self.active = active
+        self.disabled = False
 
     def render(self, surface):
         if self.active:
             surface.blit(self.mutations[0].image_left, self.rect)
             surface.blit(self.separator, self.rect.move(31, 0))
             surface.blit(self.mutations[1].image_right, self.rect.move(32, 0))
+        elif self.disabled:
+            surface.blit(self.mutations[0].image_left_disabled, self.rect)
+            surface.blit(self.separator_trans, self.rect.move(31, 0))
+            surface.blit(self.mutations[1].image_right_disabled, self.rect.move(32, 0))
         else:
             surface.blit(self.mutations[0].image_left_inactive, self.rect)
             surface.blit(self.separator_trans, self.rect.move(31, 0))
@@ -34,8 +39,10 @@ class InjectionsBar:
             self.injections.append(inj)
             r = r.move(67, 0)
 
-    def injections_switched(self, new_injection):
+    def injections_switched(self, old_injection, new_injection):
         for i in range(0, len(self.injections)):
+            if i == old_injection:
+                self.injections[i].disabled = True
             if i == new_injection:
                 self.injections[i].active = True
             else:

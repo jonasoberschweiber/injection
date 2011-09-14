@@ -29,6 +29,8 @@ class Fighter(pygame.sprite.Sprite):
 
         # speed multiplicator
         self.speed_multi = 1
+        self.damage_reduction = 0
+        self.damage_modifier = 1
         self.health = 100
         self.punching = False
         self.kicking = False
@@ -37,8 +39,9 @@ class Fighter(pygame.sprite.Sprite):
         self.damage_callbacks = []
         self.injection_callbacks = []
 
-        self.injections = [(mutation.FiftyPercentMoreSpeedMutation(), mutation.TranquilityMutation(), None),
-                           (mutation.WingsMutation(), mutation.MagicalAffinityMutation(), None)]
+        self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
+                           (mutation.StrengthMutation(), mutation.SwiftFeetMutation(), None), 
+                           (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = 0
 
         # holds the speed to be subtracted when the user lifts the 'left' or 'right'
@@ -94,7 +97,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'punch02'
             elif self.anim_frame == 2:
                 self.sprite = 'punch03'
-                self.game.hit_opponent(self, PUNCH_DAMAGE)
+                self.game.hit_opponent(self, PUNCH_DAMAGE * self.damage_modifier)
             elif self.anim_frame >= 6:
                 self.sprite = 'still'
                 self.punching = False
@@ -104,7 +107,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'kick02'
             elif self.anim_frame == 3:
                 self.sprite = 'kick03'
-                self.game.hit_opponent(self, KICK_DAMAGE)
+                self.game.hit_opponent(self, KICK_DAMAGE * self.damage_modifier)
             elif self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.kicking = False
@@ -123,6 +126,8 @@ class Fighter(pygame.sprite.Sprite):
         self.kick_sound.play()
     
     def take_damage(self, dmg, direction):
+        dmg = int((1 - self.damage_reduction) * dmg)
+        print dmg
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health)
@@ -160,6 +165,6 @@ class Fighter(pygame.sprite.Sprite):
         for m in self.injections[number]:
             if m != None:
                 m.activated(self)
-        self.current_injection = number
         for cb in self.injection_callbacks:
-            cb(number)
+            cb(self.current_injection, number)
+        self.current_injection = number

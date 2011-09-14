@@ -24,27 +24,26 @@ class Game:
         self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(683, 17, 323, 27), color=2)
         self.injectionsbar1 = InjectionsBar(self.fighter1, pygame.Rect(33, 50, 300, 27))
         self.injectionsbar2 = InjectionsBar(self.fighter2, pygame.Rect(695, 50, 300, 27))
-        self.ai = FightingAi(self, self.fighter2)
+#        self.ai = FightingAi(self, self.fighter2)
 
         self.f = self.fighter1
     def ev_quit(self, e):
         pass
 
     def ev_keydown(self, e):
-        if e.unicode == 'd':
+        if e.key == pygame.K_RIGHT:
             self.f.right()
-        elif e.unicode == 'a':
+        elif e.key == pygame.K_LEFT:
             self.f.left()
-        elif e.unicode == 'w':
+        elif e.key == pygame.K_SPACE:
             self.f.jump()
-        elif e.unicode == 'j':
+        elif e.unicode == 'm':
             self.f.punch()
-        elif e.unicode == 'k':
+        elif e.unicode == 'n':
             self.f.kick()
-        elif e.unicode == '1':
-            self.f.switch_to_injection(0)
-        elif e.unicode == '2':
-            self.f.switch_to_injection(1)
+        elif e.key == pygame.K_UP:
+            if self.f.current_injection < len(self.f.injections) - 1:
+                self.f.switch_to_injection(self.f.current_injection + 1)
         elif e.unicode == 's':
             if self.f == self.fighter1:
                 self.f = self.fighter2
@@ -54,9 +53,9 @@ class Game:
             sys.exit()
 
     def ev_keyup(self, e):
-        if e.key == 97:
+        if e.key == pygame.K_LEFT:
             self.f.stop_left()
-        elif e.key == 100:
+        elif e.key == pygame.K_RIGHT:
             self.f.stop_right()
 
     def opponent(self, caller):
@@ -95,7 +94,7 @@ class Game:
             self.pointsbar2.render(self.surface)
             self.injectionsbar1.render(self.surface)
             self.injectionsbar2.render(self.surface)
-            self.ai.update()
+        #    self.ai.update()
 
             pygame.display.flip()
 

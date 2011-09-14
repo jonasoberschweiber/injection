@@ -16,14 +16,20 @@ class Mutation:
     def deactivated(self, fighter):
         pass
 
-class FiftyPercentMoreSpeedMutation(Mutation):
+class SwiftFeetMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "swiftfeet")
 
     def activated(self, fighter):
-        fighter.speed_multi = 1.5
+        fighter.speed_x *= 2
+        fighter.speed_reset_l = fighter.speed_x
+        fighter.speed_reset_r = fighter.speed_x
+        fighter.speed_multi = 2
     
-    def deactived(self, fighter):
+    def deactivated(self, fighter):
+        fighter.speed_x /= 2
+        fighter.speed_reset_l = fighter.speed_x
+        fighter.speed_reset_r = fighter.speed_x
         fighter.speed_multi = 1
 
 class HundredPercentMoreSpeedMutation(Mutation):
@@ -51,10 +57,10 @@ class HardenedSkinMutation(Mutation):
         Mutation.__init__(self, "hardenedskin")
 
     def activated(self, fighter):
-        pass
+        fighter.damage_reduction += .4
 
     def deactivated(self, fighter):
-        pass
+        fighter.damage_reduction -= .4
 
 class WingsMutation(Mutation):
     def __init__(self):
@@ -91,7 +97,7 @@ class StrengthMutation(Mutation):
         Mutation.__init__(self, "strength")
 
     def activated(self, fighter):
-        pass
+        fighter.damage_modifier += .4
 
     def deactivated(self, fighter):
-        pass
+        fighter.damage_modifier -= .4
