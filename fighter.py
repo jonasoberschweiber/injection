@@ -84,6 +84,9 @@ class Fighter(pygame.sprite.Sprite):
     def hit_boxes(self):
         return self._hit_boxes(self.rect)
 
+    def real_rect(self):
+        return self.game.viewport.real_rect(self.rect)
+
     def update(self):
         dy = 60
         for platform in self.game.world.obstacles(self):
@@ -150,23 +153,23 @@ class Fighter(pygame.sprite.Sprite):
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
-            cb(self.health)
+            cb(self.health, dmg)
         self.hit_sound.play()
         # we want a little pushback
         self.pushback = 15 * direction
     
     def left(self):
         self.register_keypress('left')
-        self.speed_x -= 15 * self.speed_multi
-        self.speed_reset_l = -15 * self.speed_multi
+        self.speed_x -= 20 * self.speed_multi
+        self.speed_reset_l = -20 * self.speed_multi
         if self.looking_right:
             self.looking_right = False
             self.sprite_map.flip()
     
     def right(self):
         self.register_keypress('right')
-        self.speed_x += 15 * self.speed_multi
-        self.speed_reset_r = 15 * self.speed_multi
+        self.speed_x += 20 * self.speed_multi
+        self.speed_reset_r = 20 * self.speed_multi
         if not self.looking_right:
             self.looking_right = True
             self.sprite_map.flip()
