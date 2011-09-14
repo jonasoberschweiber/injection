@@ -9,8 +9,8 @@ import mutation
 JUMP_SPEED = -100
 JUMP_DURATION = 10
 
-KICK_DAMAGE = 10
-PUNCH_DAMAGE = 5
+KICK_DAMAGE = 45
+PUNCH_DAMAGE = 35
 
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color):
@@ -32,7 +32,7 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_multi = 1
         self.damage_reduction = 0
         self.damage_modifier = 1
-        self.health = 100
+        self.health = 1000
         self.punching = False
         self.kicking = False
         self.anim_frame = 0
@@ -43,7 +43,7 @@ class Fighter(pygame.sprite.Sprite):
         self.injection_callbacks = []
 
         self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
-                           (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
+                           (mutation.WingsMutation(), mutation.HardenedSkinMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = 0
 
