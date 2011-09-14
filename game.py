@@ -26,7 +26,7 @@ class Game:
         self.injectionsbar1 = InjectionsBar(self.fighter1, pygame.Rect(33, 50, 300, 27))
         self.injectionsbar2 = InjectionsBar(self.fighter2, pygame.Rect(695, 50, 300, 27))
         self.roundcounter = RoundCounter(pygame.Rect(427, 0, 167, 50))
-        self.ai = FightingAi(self, self.fighter2)
+#        self.ai = FightingAi(self, self.fighter2)
 
         self.f = self.fighter1
     def ev_quit(self, e):
@@ -97,7 +97,7 @@ class Game:
             self.injectionsbar1.render(self.surface)
             self.injectionsbar2.render(self.surface)
             self.roundcounter.render(self.surface)
-            self.ai.update()
+#            self.ai.update()
 
             pygame.display.flip()
 

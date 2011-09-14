@@ -7,7 +7,7 @@ from spritemap import SpriteMap
 import mutation
 
 JUMP_SPEED = -100
-JUMP_DURATION = 15
+JUMP_DURATION = 10
 
 KICK_DAMAGE = 10
 PUNCH_DAMAGE = 5
