@@ -17,8 +17,8 @@ class Game:
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.viewport = Viewport(self)
         self.world = World(self, "gfx/world01.json")
-        self.fighter1 = Fighter(self, pygame.Color(200, 0, 0, 255))
-        self.fighter2 = Fighter(self, pygame.Color(0, 0, 200, 255))
+        self.fighter1 = Fighter(self, pygame.Color(0, 0, 200, 255))
+        self.fighter2 = Fighter(self, pygame.Color(200, 0, 0, 255))
         self.fighter2.rect.left = 800
         self.pointsbar1 = PointsBar(self.fighter1, pygame.Rect(22, 17, 323, 27), color=1)
         self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(683, 17, 323, 27), color=2)
