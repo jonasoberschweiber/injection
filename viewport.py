@@ -9,7 +9,7 @@ class Viewport:
         return pygame.Rect(rect.x - self.offset, rect.y, rect.width, rect.height)
 
     def can_move(self, caller, new_rect):
-        opponent = self.game.world.opponent(caller)
+        opponent = self.game.opponent(caller)
         new_caller_rect = new_rect
         opp_real_rect = self.real_rect(opponent.rect)
 

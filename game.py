@@ -4,6 +4,7 @@ from world import World
 from viewport import Viewport
 from fighter import Fighter
 from pointsbar import PointsBar
+from ai import FightingAi
 
 class Game:
     def __init__(self):
@@ -18,6 +19,7 @@ class Game:
         self.fighter2.rect.left = 800
         self.pointsbar1 = PointsBar(self.fighter1, pygame.Rect(20, 20, 250, 30), pygame.Color(200, 0, 0, 255))
         self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(750, 20, 250, 30), pygame.Color(0, 0, 200, 255))
+        self.ai = FightingAi(self, self.fighter2)
 
         self.f = self.fighter1
     def ev_quit(self, e):
@@ -52,6 +54,21 @@ class Game:
         elif e.key == 100:
             self.f.stop_right()
 
+    def opponent(self, caller):
+        opp = self.fighter2
+        if opp == caller:
+            opp = self.fighter1
+        return opp
+
+    def hit_opponent(self, caller, damage):
+        opp = self.opponent(caller)
+        opp_hb = opp.hit_boxes()
+        direction = 1
+        if caller.looking_right:
+            direction = -1
+        if any([x.collidelist(opp_hb) != -1 for x in caller.hit_boxes()]):
+            opp.take_damage(damage, direction)
+
     def main_loop(self):
         while True:
             self.clock.tick(30)
@@ -71,6 +88,7 @@ class Game:
             self.fighter2.render(self.surface)
             self.pointsbar1.render(self.surface)
             self.pointsbar2.render(self.surface)
+            self.ai.update()
 
             pygame.display.flip()
 

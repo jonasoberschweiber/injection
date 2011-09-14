@@ -90,7 +90,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'punch02'
             elif self.anim_frame == 2:
                 self.sprite = 'punch03'
-                self.game.world.hit_opponent(self, PUNCH_DAMAGE)
+                self.game.hit_opponent(self, PUNCH_DAMAGE)
             elif self.anim_frame >= 6:
                 self.sprite = 'still'
                 self.punching = False
@@ -100,7 +100,7 @@ class Fighter(pygame.sprite.Sprite):
                 self.sprite = 'kick02'
             elif self.anim_frame == 3:
                 self.sprite = 'kick03'
-                self.game.world.hit_opponent(self, KICK_DAMAGE)
+                self.game.hit_opponent(self, KICK_DAMAGE)
             elif self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.kicking = False

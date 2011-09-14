@@ -28,14 +28,8 @@ class World:
             return True
         return False
 
-    def opponent(self, caller):
-        opp = self.game.fighter2
-        if opp == caller:
-            opp = self.game.fighter1
-        return opp
-
     def hit_opponent(self, caller, damage):
-        opp = self.opponent(caller)
+        opp = self.game.opponent(caller)
         opp_hb = opp.hit_boxes()
         direction = 1
         if caller.looking_right:
@@ -44,7 +38,7 @@ class World:
             opp.take_damage(damage, direction)
 
     def collides_opponent(self, caller, hit_boxes):
-        opponent = self.opponent(caller)
+        opponent = self.game.opponent(caller)
         
         opponent_hit_boxes = opponent.hit_boxes()
         a = False
