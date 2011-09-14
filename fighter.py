@@ -26,6 +26,7 @@ class Fighter(pygame.sprite.Sprite):
 
         self.kick_sound = pygame.mixer.Sound('snd/kick_empty.wav')
         self.punch_sound = pygame.mixer.Sound('snd/punch_empty.wav')
+        self.hit_sound = pygame.mixer.Sound('snd/kick_hit.wav')
 
         # speed multiplicator
         self.speed_multi = 1
@@ -126,6 +127,7 @@ class Fighter(pygame.sprite.Sprite):
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health)
+        self.hit_sound.play()
         # we want a little pushback
         self.pushback = 15 * direction
     
