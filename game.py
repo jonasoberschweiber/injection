@@ -10,6 +10,7 @@ class Game:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption("Injection")
+        pygame.mixer.init()
         self.clock = pygame.time.Clock()
         self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
         self.viewport = Viewport(self)

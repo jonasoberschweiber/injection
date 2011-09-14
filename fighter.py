@@ -24,6 +24,9 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_y = 0
         self.looking_right = True
 
+        self.kick_sound = pygame.mixer.Sound('snd/kick_empty.wav')
+        self.punch_sound = pygame.mixer.Sound('snd/punch_empty.wav')
+
         # speed multiplicator
         self.speed_multi = 1
         self.health = 100
@@ -111,10 +114,12 @@ class Fighter(pygame.sprite.Sprite):
     def punch(self):
         self.punching = True
         self.anim_frame = 0
+        self.punch_sound.play()
     
     def kick(self):
         self.kicking = True
         self.anim_frame = 0
+        self.kick_sound.play()
     
     def take_damage(self, dmg, direction):
         self.health -= dmg

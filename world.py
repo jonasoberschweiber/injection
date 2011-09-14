@@ -28,14 +28,6 @@ class World:
             return True
         return False
 
-    def hit_opponent(self, caller, damage):
-        opp = self.game.opponent(caller)
-        opp_hb = opp.hit_boxes()
-        direction = 1
-        if caller.looking_right:
-            direction = -1
-        if any([x.collidelist(opp_hb) != -1 for x in caller.hit_boxes()]):
-            opp.take_damage(damage, direction)
 
     def collides_opponent(self, caller, hit_boxes):
         opponent = self.game.opponent(caller)
