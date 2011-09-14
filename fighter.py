@@ -146,7 +146,7 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
         self.kick_sound.play()
     
-    def take_damage(self, dmg, direction):
+    def take_damage(self, dmg, direction, kind='physical'):
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
