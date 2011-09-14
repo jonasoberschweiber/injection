@@ -37,8 +37,8 @@ class Fighter(pygame.sprite.Sprite):
         self.damage_callbacks = []
         self.injection_callbacks = []
 
-        self.injections = [(mutation.FiftyPercentMoreSpeedMutation(), mutation.HundredPercentMoreSpeedMutation(), None),
-                           (mutation.HundredPercentMoreSpeedMutation(), mutation.MagicalAffinityMutation(), None)]
+        self.injections = [(mutation.FiftyPercentMoreSpeedMutation(), mutation.TranquilityMutation(), None),
+                           (mutation.WingsMutation(), mutation.MagicalAffinityMutation(), None)]
         self.current_injection = 0
 
         # holds the speed to be subtracted when the user lifts the 'left' or 'right'
