@@ -9,6 +9,7 @@ from ai import FightingAi
 
 class Game:
     def __init__(self):
+        pygame.mixer.pre_init(frequency=22050, size=-16, channels=8, buffer=256)
         pygame.init()
         pygame.display.set_caption("Injection")
         pygame.mixer.init()
