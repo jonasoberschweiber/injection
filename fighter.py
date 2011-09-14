@@ -128,7 +128,6 @@ class Fighter(pygame.sprite.Sprite):
     
     def take_damage(self, dmg, direction):
         dmg = int((1 - self.damage_reduction) * dmg)
-        print dmg
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health)
