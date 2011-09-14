@@ -2,8 +2,6 @@ from fighter import Fighter
 
 class FightingAi:
 	# TODO: 
-	# * Right now the AI can be evaded completely by jumping to a higher level,
-	#   we need to react to vertical distance.
 	# * Punching would be nice.
 	# * When injections are implemented: the AI needs to know about them.
 
@@ -48,6 +46,8 @@ class FightingAi:
 		else:
 			self.state = self.MOVING_RIGHT
 			self.fighter.right()
+		if self.opponent.rect.y - self.fighter.rect.y < 20:
+			self.fighter.jump()
 
 	def moving_left(self):
 		dist = self.distance_to_opponent()
@@ -55,6 +55,7 @@ class FightingAi:
 			self.fighter.stop_left()
 			self.state = self.ATTACK_OPPONENT
 		if dist > 0:
+			self.fighter.stop_left()
 			self.fighter.right()
 			self.state = self.MOVING_RIGHT
 
@@ -64,6 +65,7 @@ class FightingAi:
 			self.fighter.stop_right()
 			self.state = self.ATTACK_OPPONENT
 		if dist < 0:
+			self.fighter.stop_right()
 			self.fighter.left()
 			self.state = self.MOVING_LEFT
 	
