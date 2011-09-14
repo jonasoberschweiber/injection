@@ -12,6 +12,8 @@ JUMP_DURATION = 10
 KICK_DAMAGE = 45
 PUNCH_DAMAGE = 35
 
+SEQUENCE_LIMIT = 40
+
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color):
         pygame.sprite.Sprite.__init__(self)
@@ -54,6 +56,17 @@ class Fighter(pygame.sprite.Sprite):
 
         # holds pushback amount
         self.pushback = 0
+
+        # used to keep track of whether a keypress belongs to a sequence:
+        # when a key is pressed and sequence_frame is smaller than SEQUENCE_LIMIT
+        # the key is added to the key sequence
+        # if sequence_frame is greater than or equal to SEQUENCE_LIMIT, the key sequence
+        # and sequence frame number are reset
+        self.sequence_frame = 0
+        self.current_sequence = ''
+        self.sequence_listeners = {}
+
+        self.switch_to_injection(0)
 
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
@@ -120,20 +133,23 @@ class Fighter(pygame.sprite.Sprite):
         
         self.anim_frame += 1
         self.jump_frame += 1
+        self.sequence_frame += 1
         if self.jump_frame > JUMP_DURATION:
             self.jump_count = 0
 
     def punch(self):
+        self.register_keypress('punch')
         self.punching = True
         self.anim_frame = 0
         self.punch_sound.play()
     
     def kick(self):
+        self.register_keypress('kick')
         self.kicking = True
         self.anim_frame = 0
         self.kick_sound.play()
     
-    def take_damage(self, dmg, direction):
+    def take_damage(self, dmg, direction, kind='physical'):
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
@@ -143,6 +159,7 @@ class Fighter(pygame.sprite.Sprite):
         self.pushback = 15 * direction
     
     def left(self):
+        self.register_keypress('left')
         self.speed_x -= 20 * self.speed_multi
         self.speed_reset_l = -20 * self.speed_multi
         if self.looking_right:
@@ -150,6 +167,7 @@ class Fighter(pygame.sprite.Sprite):
             self.sprite_map.flip()
     
     def right(self):
+        self.register_keypress('right')
         self.speed_x += 20 * self.speed_multi
         self.speed_reset_r = 20 * self.speed_multi
         if not self.looking_right:
@@ -166,6 +184,9 @@ class Fighter(pygame.sprite.Sprite):
         if self.jump_count < self.jump_max:
             self.jump_count += 1
             self.jump_frame = 1
+    
+    def opponent(self):
+        return self.game.opponent(self)
 
     def switch_to_injection(self, number):
         for m in self.injections[self.current_injection]:
@@ -177,3 +198,19 @@ class Fighter(pygame.sprite.Sprite):
         for cb in self.injection_callbacks:
             cb(self.current_injection, number)
         self.current_injection = number
+    
+    def register_keypress(self, key):
+        if self.sequence_frame < SEQUENCE_LIMIT:
+            self.current_sequence += key
+            if self.sequence_listeners.has_key(self.current_sequence):
+                self.sequence_listeners[self.current_sequence](self)
+        else:
+            self.sequence_frame = 0
+            self.current_sequence = key
+    
+    def register_key_sequence(self, sequence, listener):
+        self.sequence_listeners[sequence] = listener
+    
+    def deregister_key_sequence(self, sequence):
+        if self.sequence_listeners.has_key(sequence):
+            self.sequence_listeners.pop(sequence)
