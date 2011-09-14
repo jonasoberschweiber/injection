@@ -4,6 +4,7 @@ from world import World
 from viewport import Viewport
 from fighter import Fighter
 from pointsbar import PointsBar
+from injectionsbar import InjectionsBar
 from ai import FightingAi
 
 class Game:
@@ -17,8 +18,10 @@ class Game:
         self.fighter1 = Fighter(self, pygame.Color(200, 0, 0, 255))
         self.fighter2 = Fighter(self, pygame.Color(0, 0, 200, 255))
         self.fighter2.rect.left = 800
-        self.pointsbar1 = PointsBar(self.fighter1, pygame.Rect(20, 20, 250, 30), pygame.Color(200, 0, 0, 255))
-        self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(750, 20, 250, 30), pygame.Color(0, 0, 200, 255))
+        self.pointsbar1 = PointsBar(self.fighter1, pygame.Rect(22, 17, 323, 27), color=1)
+        self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(683, 17, 323, 27), color=2)
+        self.injectionsbar1 = InjectionsBar(self.fighter1, pygame.Rect(33, 50, 300, 27))
+        self.injectionsbar2 = InjectionsBar(self.fighter2, pygame.Rect(695, 50, 300, 27))
         self.ai = FightingAi(self, self.fighter2)
 
         self.f = self.fighter1
@@ -88,6 +91,8 @@ class Game:
             self.fighter2.render(self.surface)
             self.pointsbar1.render(self.surface)
             self.pointsbar2.render(self.surface)
+            self.injectionsbar1.render(self.surface)
+            self.injectionsbar2.render(self.surface)
             self.ai.update()
 
             pygame.display.flip()
