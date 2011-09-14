@@ -1,6 +1,12 @@
 from fighter import Fighter
 
 class FightingAi:
+	# TODO: 
+	# * Right now the AI can be evaded completely by jumping to a higher level,
+	#   we need to react to vertical distance.
+	# * Punching would be nice.
+	# * When injections are implemented: the AI needs to know about them.
+
 	MOVE_TOWARDS_OPPONENT = 0
 	MOVING_LEFT = 2
 	MOVING_RIGHT = 3
