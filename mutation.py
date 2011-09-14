@@ -45,12 +45,15 @@ class HundredPercentMoreSpeedMutation(Mutation):
 class MagicalAffinityMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "magicalaffinity")
+    
+    def fireball(self, fighter):
+        print "FIRE"
 
     def activated(self, fighter):
-        pass
+        fighter.register_key_sequence('leftleftpunch', self.fireball)
 
     def deactivated(self, fighter):
-        pass
+        fighter.deregister_key_sequence('leftleftpunch')
 
 class HardenedSkinMutation(Mutation):
     def __init__(self):
@@ -71,7 +74,7 @@ class WingsMutation(Mutation):
 
     def deactivated(self, fighter):
         fighter.jump_max = 1
-        
+
 class TranquilityMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "tranquility")
