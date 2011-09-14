@@ -2,6 +2,7 @@ from fighter import Fighter
 
 class FightingAi:
 	# TODO: 
+	# * The AI is a little fast, give the player some space.
 	# * Punching would be nice.
 	# * When injections are implemented: the AI needs to know about them.
 
