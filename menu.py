@@ -38,6 +38,7 @@ class MainMenu:
 
     def btn_singleplayer(self):
         self.m.active = False
+        self.m.game.next_round()
             
     def btn_multiplayer(self):
         self.m.active = False

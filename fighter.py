@@ -37,7 +37,7 @@ class Fighter(pygame.sprite.Sprite):
 
         self.kick_sound = pygame.mixer.Sound('snd/kick_empty.wav')
         self.punch_sound = pygame.mixer.Sound('snd/punch_empty.wav')
-        self.hit_sound = pygame.mixer.Sound('snd/kick_hit.wav')
+        self.hit_sounds = [pygame.mixer.Sound('snd/kick_hit.wav'), None]
 
         # speed multiplicator
         self.speed_multi = 1
@@ -175,14 +175,15 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
         self.kick_sound.play()
     
-    def take_damage(self, dmg, direction, kind='physical', pushback_mod=1):
+    def take_damage(self, dmg, direction, kind='physical', sound=0, pushback_mod=1):
         for cb in self.damage_veto_callbacks:
             dmg = cb(dmg, kind)
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health, dmg)
-        self.hit_sound.play()
+        if self.hit_sounds[sound]:
+            self.hit_sounds[sound].play()
         # we want a little pushback
         self.pushback = PUSHBACK_DISTANCE * direction * pushback_mod
         self.game.check_state()
@@ -265,7 +266,6 @@ class Fighter(pygame.sprite.Sprite):
 
     def register_keypress(self, key):
         if self.sequence_frame < SEQUENCE_LIMIT:
-            #self.current_sequence += key
             self.current_sequence.append(key)
             
             pos = 0
@@ -274,13 +274,10 @@ class Fighter(pygame.sprite.Sprite):
                     self.sequence_listeners["".join(self.current_sequence[pos:])](self)
                     break
 
-            #if self.sequence_listeners.has_key(self.current_sequence):
-            #    self.sequence_listeners[self.current_sequence](self)
             self.sequence_frame = 0
         else:
             self.sequence_frame = 0
             self.current_sequence = [key]
-        print self.current_sequence
     
     def register_key_sequence(self, sequence, listener):
         self.sequence_listeners[sequence] = listener

@@ -9,7 +9,7 @@ class RoundCounter:
         self.img_ready = pygame.image.load("gfx/ready.png")
         self.img_go = pygame.image.load("gfx/go.png")
         self.snd_newround = pygame.mixer.Sound("snd/new_round.wav")
-        self.round = 0
+        self.round = -1
         self.rect = rect
         self.animation_frame = 0
 
@@ -32,7 +32,8 @@ class RoundCounter:
                 surface.blit(self.img_ready, (345, 261))
                 surface.blit(self.img_go, (540, 261))
                 self.game.ignore_keys = False
-                pygame.mixer.music.play()
+                if self.animation_frame == 135:
+                    pygame.mixer.music.play()
             else:
                 self.animation_frame = 0
                 return
