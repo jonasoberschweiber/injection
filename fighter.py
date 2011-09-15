@@ -12,6 +12,8 @@ JUMP_DURATION = 10
 KICK_DAMAGE = 45
 PUNCH_DAMAGE = 35
 
+PUSHBACK_DISTANCE = 10
+
 SEQUENCE_LIMIT = 40
 
 class Fighter(pygame.sprite.Sprite):
@@ -98,9 +100,15 @@ class Fighter(pygame.sprite.Sprite):
             else:
                 dy = 0
         dy += math.trunc(JUMP_SPEED * math.cos((math.pi / (2 * JUMP_DURATION)) * min(self.jump_frame, JUMP_DURATION)))
-        new_rect = self.rect.move(self.speed_x - self.pushback, dy)
-        if self.pushback != 0:
-            self.pushback = 0
+
+        if not self.pushback:
+            new_rect = self.rect.move(self.speed_x - self.pushback, dy)
+        else:
+            new_rect = self.rect.move(self.speed_x - self.pushback, dy*.35)
+            if self.pushback > 0:
+                self.pushback -= 1
+            elif self.pushback < 0:
+                self.pushback = 0
 
         if not self.game.viewport.can_move(self, new_rect):
             new_rect.left = self.rect.left
@@ -140,7 +148,7 @@ class Fighter(pygame.sprite.Sprite):
             self.jump_count = 0
 
     def punch(self):
-        if self.punching or self.kicking:
+        if self.punching or self.kicking or self.pushback > 0:
             return
         self.register_keypress('punch')
         self.punching = True
@@ -148,7 +156,7 @@ class Fighter(pygame.sprite.Sprite):
         self.punch_sound.play()
     
     def kick(self):
-        if self.punching or self.kicking:
+        if self.punching or self.kicking or self.pushback > 0:
             return
         self.register_keypress('kick')
         self.kicking = True
@@ -162,7 +170,7 @@ class Fighter(pygame.sprite.Sprite):
             cb(self.health, dmg)
         self.hit_sound.play()
         # we want a little pushback
-        self.pushback = 15 * direction
+        self.pushback = PUSHBACK_DISTANCE * direction
         self.game.check_state()
     
     def left(self):
