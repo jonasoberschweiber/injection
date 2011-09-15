@@ -29,6 +29,9 @@ class Game:
         self.ai = FightingAi(self, self.fighter2)
         self.ignore_keys = False
 
+        pygame.mixer.music.load("snd/music.wav")
+        pygame.mixer.music.set_volume(.35)
+        pygame.mixer.music.play()
         self.f = self.fighter1
     def ev_quit(self, e):
         pass
