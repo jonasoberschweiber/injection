@@ -52,10 +52,10 @@ class Fighter(pygame.sprite.Sprite):
         self.update_callbacks = []
         self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.MagicalAffinityMutation(), mutation.TranquilityMutation(), None),
+        self.injections = [(mutation.TranquilityMutation(), mutation.HardenedSkinMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
-        self.current_injection = 0
+        self.current_injection = -1 
 
         # holds the speed to be subtracted when the user lifts the 'left' or 'right'
         # button
@@ -73,8 +73,6 @@ class Fighter(pygame.sprite.Sprite):
         self.sequence_frame = 0
         self.current_sequence = ''
         self.sequence_listeners = {}
-
-        self.switch_to_injection(0)
 
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
@@ -96,6 +94,8 @@ class Fighter(pygame.sprite.Sprite):
         return self.game.viewport.real_rect(self.rect)
 
     def update(self):
+        if self.current_injection == -1:
+            self.switch_to_injection(0)
         dy = 60
         for platform in self.game.world.obstacles(self):
             if not util.collide_line_top(self.rect, platform):
@@ -220,9 +220,10 @@ class Fighter(pygame.sprite.Sprite):
         return self.game.opponent(self)
 
     def switch_to_injection(self, number):
-        for m in self.injections[self.current_injection]:
-            if m != None:
-                m.deactivated(self)
+        if self.current_injection != -1:
+            for m in self.injections[self.current_injection]:
+                if m != None:
+                    m.deactivated(self)
         for m in self.injections[number]:
             if m != None:
                 m.activated(self)

@@ -48,10 +48,10 @@ class PointsBar:
         if self.animation:
             if self.num > 0:
                 self.animation_health += 20
+                self.animation = self.animation_health < self.health
             else:
                 self.animation_health -= 20
-            if self.animation_health > self.health:
-                self.animation = False
+                self.animation = self.animation_health > self.health
 
         if self.num_animation > 0:
             color = self.num_color
