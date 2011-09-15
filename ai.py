@@ -11,11 +11,14 @@ class FightingAi:
 	MOVING_RIGHT = 3
 	ATTACK_OPPONENT = 1
 
+	REACTION_TIME = 10
+
 	def __init__(self, game, fighter):
 		self.fighter = fighter
 		self.game = game
 		self.opponent = self.game.opponent(self.fighter)
 		self.state = self.MOVE_TOWARDS_OPPONENT
+		self.reaction_time = -1
 		self.state_handlers = {
 			self.MOVE_TOWARDS_OPPONENT: self.move_towards_opponent,
 			self.ATTACK_OPPONENT: self.attack_opponent,
@@ -53,22 +56,41 @@ class FightingAi:
 	def moving_left(self):
 		dist = self.distance_to_opponent()
 		if abs(dist) < 20:
-			self.fighter.stop_left()
-			self.state = self.ATTACK_OPPONENT
+				self.fighter.stop_left()
+				self.state = self.ATTACK_OPPONENT
 		if dist > 0:
-			self.fighter.stop_left()
-			self.fighter.right()
-			self.state = self.MOVING_RIGHT
+			if self.reaction_time == 0:
+				self.fighter.stop_left()
+				self.fighter.right()
+				self.state = self.MOVING_RIGHT
+				self.reaction_time = -1
+			elif self.reaction_time == -1:
+				self.reaction_time = self.REACTION_TIME
+			else:
+				print "waiting", self.reaction_time
+				self.reaction_time -= 1
 
 	def moving_right(self):
 		dist = self.distance_to_opponent()
 		if abs(dist) < 20:
-			self.fighter.stop_right()
-			self.state = self.ATTACK_OPPONENT
+			if self.reaction_time == 0:
+				self.fighter.stop_right()
+				self.state = self.ATTACK_OPPONENT
+			elif self.reaction_time == -1:
+				self.reaction_time = self.REACTION_TIME
+			else:
+				self.reaction_time -= 1
 		if dist < 0:
-			self.fighter.stop_right()
-			self.fighter.left()
-			self.state = self.MOVING_LEFT
+			if self.reaction_time == 0:
+				self.fighter.stop_right()
+				self.fighter.left()
+				self.state = self.MOVING_LEFT
+				self.reaction_time = -1
+			elif self.reaction_time == -1:
+				self.reaction_time = self.REACTION_TIME
+			else:
+				print "waiting", self.reaction_time
+				self.reaction_time -= 1
 	
 	def attack_opponent(self):
 		dist = self.distance_to_opponent()
