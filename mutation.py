@@ -80,24 +80,64 @@ class WingsMutation(Mutation):
         fighter.jump_max = 1
 
 class TranquilityMutation(Mutation):
+    LIFE_GAINED = 50
+    GAIN_TIME = 160
+
     def __init__(self):
         Mutation.__init__(self, "tranquility")
+    
+    def update(self):
+        if self.frame % self.GAIN_TIME == 0:
+            self.fighter.increase_health(self.LIFE_GAINED)
+        self.frame += 1
+    
+    def damage_veto(self, damage, kind):
+        if kind == 'magical':
+            return 0
+        else:
+            return damage
 
     def activated(self, fighter):
-        pass
+        self.fighter = fighter
+        self.frame = 0
+        fighter.damage_veto_callbacks.append(self.damage_veto)
+        fighter.update_callbacks.append(self.update)
         
     def deactivated(self, fighter):
-        pass
+        if self.damage_veto in fighter.damage_veto_callbacks:
+            fighter.damage_veto_callbacks.remove(self.damage_veto)
+            fighter.update_callbacks.remove(self.update)
 
 class ToxicMutation(Mutation):
+    DAMAGE = 10
+    DAMAGE_EVERY = 100
+    DAMAGE_FOR = 500
+
     def __init__(self):
         Mutation.__init__(self, "toxic")
 
+    def opponent_damage_taken(self, health, dmg):
+        if not self.opponent_update in self.opponent.update_callbacks:
+            self.frame = 0
+            self.opponent.update_callbacks.append(self.opponent_update)
+    
+    def opponent_update(self):
+        if self.frame == self.DAMAGE_FOR:
+            self.opponent.update_callbacks.remove(self.opponent_update)
+        if self.frame % self.DAMAGE_EVERY == 0:
+            self.opponent.take_damage(self.DAMAGE, 0, 'magical')
+        self.frame += 1
+
     def activated(self, fighter):
-        pass
+        self.fighter = fighter
+        self.opponent = fighter.opponent()
+        self.opponent.damage_callbacks.append(self.opponent_damage_taken)
 
     def deactivated(self, fighter):
-        pass
+        if not hasattr(self, 'opponent'):
+            return
+        if self.opponent_damage_taken in self.opponent.damage_callbacks:
+            self.opponent.damage_callbacks.remove(self.opponent_damage_taken)
 
 class StrengthMutation(Mutation):
     def __init__(self):
