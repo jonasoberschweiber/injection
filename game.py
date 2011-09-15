@@ -25,7 +25,7 @@ class Game:
         self.pointsbar2 = PointsBar(self.fighter2, pygame.Rect(683, 17, 323, 27), color=2)
         self.injectionsbar1 = InjectionsBar(self.fighter1, pygame.Rect(33, 50, 300, 27))
         self.injectionsbar2 = InjectionsBar(self.fighter2, pygame.Rect(695, 50, 300, 27))
-        self.roundcounter = RoundCounter(pygame.Rect(427, 0, 167, 50))
+        self.roundcounter = RoundCounter(self, pygame.Rect(427, 0, 167, 50))
         self.ai = FightingAi(self, self.fighter2)
         self.ignore_keys = False
 
