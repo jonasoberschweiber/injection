@@ -1,5 +1,6 @@
 import sys
 import pygame
+from mutation import *
 
 class MainMenu:
     def __init__(self, m):
@@ -37,8 +38,9 @@ class MainMenu:
                 self.m.surface.blit(self.buttons[i][0][1], self.rect.move(0, i*70))
 
     def btn_singleplayer(self):
-        self.m.active = False
-        self.m.game.next_round()
+        #self.m.active = False
+        #self.m.game.next_round()
+        self.m.current_menu = 2
             
     def btn_multiplayer(self):
         self.m.active = False
@@ -69,11 +71,132 @@ class HelpMenu:
         self.m.surface.fill(pygame.Color(255, 255, 255))
         self.m.surface.blit(self.help_image, self.rect)
 
+class InjectionMenu:
+    def __init__(self, m):
+        self.m = m
+        self.available_injections = [SwiftFeetMutation(), HardenedSkinMutation(), StrengthMutation(), 
+                                     MagicalAffinityMutation(), WingsMutation(), TranquilityMutation(), 
+                                     ToxicMutation()]
+        self.selection1 = 0
+        self.selection2 = 0
+        self.img_avail_inj = pygame.image.load("gfx/injmenu/available_injections.png")
+        self.img_your_inj = pygame.image.load("gfx/injmenu/yourinjections.png")
+        self.img_ready = pygame.image.load("gfx/injmenu/ready.png")
+        self.img_selection = pygame.image.load("gfx/injmenu/selection.png")
+        self.img_mut_separator = pygame.image.load("gfx/mutation_separator.png")
+        self.injections_rect1 = pygame.Rect(50, 130, 0, 0)
+        self.injections_rect2 = pygame.Rect(565, 130, 0, 0)
+        self.player1_mutations = []
+        self.player2_mutations = []
+        self.player1_mutationsrect = pygame.Rect(50, 560, 0, 0)
+        self.player2_mutationsrect = pygame.Rect(565, 560, 0, 0)
+        self.player1_avail_injrect = pygame.Rect(50, 50, 0, 0)
+        self.player2_avail_injrect = pygame.Rect(565, 50, 0, 0)
+        self.player1_your_injrect = pygame.Rect(50, 500, 0, 0)
+        self.player2_your_injrect = pygame.Rect(565, 500, 0, 0)
+        self.player1_readyrect = pygame.Rect(50, 635, 0, 0)
+        self.player2_readyrect = pygame.Rect(565, 635, 0, 0)
+
+    def selection_left(self, player=1):
+        if player == 1:
+            if self.selection1 % 3 != 0:
+                self.selection1 -= 1
+        else:
+            if self.selection2 % 3 != 0:
+                self.selection2 -= 1
+
+    def selection_up(self, player=1):
+        if player == 1:
+            if self.selection1 >= 3:
+                self.selection1 -= 3
+        else:
+            if self.selection2 >= 3:
+                self.selection2 -= 3
+            
+    def selection_right(self, player=1):
+        if player == 1:
+            if self.selection1 % 3 != 2 and self.selection1 < len(self.available_injections) - 1:
+                self.selection1 += 1
+        else:
+            if self.selection2 % 3 != 2 and self.selection2 < len(self.available_injections) - 1:
+                self.selection2 += 1
+
+    def selection_down(self, player=1):
+        if player == 1:
+            if self.selection1 < len(self.available_injections) - 3:
+                self.selection1 += 3
+        else:
+            if self.selection2 < len(self.available_injections) - 3:
+                self.selection2 += 3
+
+    def add_mutation(self, player=1):
+        if player == 1:
+            self.player1_mutations.append(self.available_injections[self.selection1])
+        else:
+            self.player2_mutations.append(self.available_injections[self.selection2])
+
+    def delete_mutation(self, player=1):
+        if player == 1:
+            self.player1_mutations= self.player1_mutations[:-1]
+        else:
+            self.player2_mutations= self.player2_mutations[:-1]
+
+    def key_press(self, key):
+        if key == pygame.K_LEFT:
+            self.selection_left(player=1)
+        elif key == pygame.K_RIGHT:
+            self.selection_right(player=1)
+        elif key == pygame.K_UP:
+            self.selection_up(player=1)
+        elif key == pygame.K_DOWN:
+            self.selection_down(player=1)
+        elif key == pygame.K_RETURN or key == pygame.K_SPACE:
+            if len(self.player1_mutations) < 6:
+                self.add_mutation(player=1)
+        elif key == pygame.K_BACKSPACE:
+            self.delete_mutation(player=1)
+        elif key == pygame.K_ESCAPE:
+            self.m.active = False
+
+    def render(self):
+        self.m.surface.fill(pygame.Color(255, 255, 255))
+        for i in range(0, len(self.available_injections)):
+            self.m.surface.blit(self.available_injections[i].image_full, self.injections_rect1.move(125*(i%3), 110*(i/3)))
+            self.m.surface.blit(self.available_injections[i].image_full, self.injections_rect2.move(125*(i%3), 110*(i/3)))
+            if i == self.selection1:
+                if len(self.player1_mutations) < 6:
+                    self.m.surface.blit(self.img_selection, self.injections_rect1.move(125*(i%3) - 10, 110*(i/3) - 10))
+
+        for i in range(0, len(self.player1_mutations) + 1):
+            if i % 2:
+                if i > len(self.player1_mutations) - 1:
+                    self.m.surface.blit(self.available_injections[self.selection1].image_right_inactive, self.player1_mutationsrect.move(32*i, 0))
+                    self.m.surface.blit(self.img_mut_separator, self.player1_mutationsrect.move(32*i - 1, 0))
+                    continue
+                self.m.surface.blit(self.player1_mutations[i].image_right, self.player1_mutationsrect.move(32*i, 0))
+                self.m.surface.blit(self.img_mut_separator, self.player1_mutationsrect.move(32*i - 1, 0))
+            else:
+                if i > len(self.player1_mutations) - 1:
+                    if i < 6:
+                        self.m.surface.blit(self.available_injections[self.selection1].image_left_inactive, self.player1_mutationsrect.move(32*i, 0))
+                    continue
+                self.m.surface.blit(self.player1_mutations[i].image_left, self.player1_mutationsrect.move(32*i, 0))
+                
+        self.m.surface.blit(self.img_avail_inj, self.player1_avail_injrect)
+        self.m.surface.blit(self.img_avail_inj, self.player2_avail_injrect)
+        self.m.surface.blit(self.img_your_inj, self.player1_your_injrect)
+        self.m.surface.blit(self.img_your_inj, self.player2_your_injrect)
+        if len(self.player1_mutations) == 6:
+            self.m.surface.blit(self.img_ready, self.player1_readyrect)
+        if len(self.player2_mutations) == 6:
+            self.m.surface.blit(self.img_ready, self.player2_readyrect)
+        
+
 class Menu:
     def __init__(self, game):
         self.game = game
         self.active = True
-        self.menus = [MainMenu(self), HelpMenu(self)]
+        self.menus = [MainMenu(self), HelpMenu(self), InjectionMenu(self)]
         self.current_menu = 0
         self.surface = pygame.display.get_surface()
 

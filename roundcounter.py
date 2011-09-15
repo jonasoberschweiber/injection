@@ -20,19 +20,19 @@ class RoundCounter:
         surface.blit(self.rounds[n], self.rect)
 
         if self.animation_frame > 0:
-            if self.animation_frame < 80:
+            if self.animation_frame < 50:
                 if self.animation_frame == 1:
                     pygame.mixer.music.stop()
                     pygame.mixer.music.rewind()
                 elif self.animation_frame == 25:
                     self.snd_newround.play()
-            elif self.animation_frame < 135:
+            elif self.animation_frame < 105:
                 surface.blit(self.img_ready, (345, 261))
-            elif self.animation_frame < 145:
+            elif self.animation_frame < 115:
                 surface.blit(self.img_ready, (345, 261))
                 surface.blit(self.img_go, (540, 261))
                 self.game.ignore_keys = False
-                if self.animation_frame == 135:
+                if self.animation_frame == 105:
                     pygame.mixer.music.play()
             else:
                 self.animation_frame = 0
