@@ -89,6 +89,7 @@ class Game:
         if self.roundcounter.round < len(self.roundcounter.rounds) - 1:
             self.fighter1.reset()
             self.fighter2.reset()
+            self.ai.reset()
             for inj in self.injectionsbar1.injections[1:]:
                 inj.disabled = False
                 inj.activate = False
