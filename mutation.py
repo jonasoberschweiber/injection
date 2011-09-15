@@ -110,8 +110,8 @@ class TranquilityMutation(Mutation):
 
 class ToxicMutation(Mutation):
     DAMAGE = 10
-    DAMAGE_EVERY = 100
-    DAMAGE_FOR = 500
+    DAMAGE_EVERY = 10
+    DAMAGE_FOR = 50
 
     def __init__(self):
         Mutation.__init__(self, "toxic")
@@ -126,7 +126,7 @@ class ToxicMutation(Mutation):
         if self.frame == self.DAMAGE_FOR:
             self.opponent.update_callbacks.remove(self.opponent_update)
         if self.frame % self.DAMAGE_EVERY == 0:
-            self.opponent.take_damage(self.DAMAGE, 0, 'magical')
+            self.opponent.take_damage(self.DAMAGE, 0, 'magical', 1)
         self.frame += 1
 
     def activated(self, fighter):
