@@ -3,6 +3,7 @@ import pygame
 import util
 
 from spritemap import SpriteMap
+from fireball import Fireball
 
 import mutation
 
@@ -174,20 +175,24 @@ class Fighter(pygame.sprite.Sprite):
         self.game.check_state()
     
     def left(self):
-        self.register_keypress('left')
         self.speed_x -= 20 * self.speed_multi
         self.speed_reset_l = -20 * self.speed_multi
         if self.looking_right:
+            self.register_keypress('back')
             self.looking_right = False
             self.sprite_map.flip()
+        else:
+            self.register_keypress('forward')
     
     def right(self):
-        self.register_keypress('right')
         self.speed_x += 20 * self.speed_multi
         self.speed_reset_r = 20 * self.speed_multi
         if not self.looking_right:
+            self.register_keypress('back')
             self.looking_right = True
             self.sprite_map.flip()
+        else:
+            self.register_keypress('forward')
 
     def stop_left(self):
         self.speed_x -= self.speed_reset_l
