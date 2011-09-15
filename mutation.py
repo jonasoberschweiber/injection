@@ -1,5 +1,7 @@
 import pygame
 
+from fireball import Fireball
+
 class Mutation:
     def __init__(self, s):
         self.image_full = pygame.image.load("gfx/mutations/%s_full.png" % s)
@@ -47,13 +49,13 @@ class MagicalAffinityMutation(Mutation):
         Mutation.__init__(self, "magicalaffinity")
     
     def fireball(self, fighter):
-        print "FIRE"
+        fighter.game.fireballs.append(Fireball(fighter.game, fighter))
 
     def activated(self, fighter):
-        fighter.register_key_sequence('leftleftpunch', self.fireball)
+        fighter.register_key_sequence('forwardforwardpunch', self.fireball)
 
     def deactivated(self, fighter):
-        fighter.deregister_key_sequence('leftleftpunch')
+        fighter.deregister_key_sequence('forwardforwardpunch')
 
 class HardenedSkinMutation(Mutation):
     def __init__(self):

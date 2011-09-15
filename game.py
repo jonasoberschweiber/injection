@@ -29,6 +29,8 @@ class Game:
         self.ai = FightingAi(self, self.fighter2)
         self.ignore_keys = False
 
+        self.fireballs = []
+
         self.f = self.fighter1
     def ev_quit(self, e):
         pass
@@ -73,14 +75,18 @@ class Game:
             opp = self.fighter1
         return opp
 
-    def hit_opponent(self, caller, damage):
+    def hit_opponent(self, caller, damage, hit_boxes=None):
         opp = self.opponent(caller)
         opp_hb = opp.hit_boxes()
         direction = 1
         if caller.looking_right:
             direction = -1
-        if any([x.collidelist(opp_hb) != -1 for x in caller.hit_boxes()]):
+        if hit_boxes == None:
+            hit_boxes = caller.hit_boxes()
+        if any([x.collidelist(opp_hb) != -1 for x in hit_boxes]):
             opp.take_damage(damage, direction)
+            return True
+        return False
 
     def game_over(self):
         print "GAME OVER"
@@ -135,6 +141,10 @@ class Game:
             self.injectionsbar2.render(self.surface)
             self.roundcounter.render(self.surface)
             self.ai.update()
+
+            for f in self.fireballs:
+                f.update()
+                f.render(self.surface)
 
             pygame.display.flip()
 
