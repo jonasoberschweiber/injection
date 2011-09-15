@@ -15,6 +15,8 @@ PUNCH_DAMAGE = 35
 
 SEQUENCE_LIMIT = 40
 
+MAX_HEALTH = 1000
+
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color, startpos=(0, 0)):
         pygame.sprite.Sprite.__init__(self)
@@ -37,7 +39,7 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_multi = 1
         self.damage_reduction = 0
         self.damage_modifier = 1
-        self.health = 1000
+        self.health = MAX_HEALTH
         self.punching = False
         self.kicking = False
         self.anim_frame = 0
@@ -45,9 +47,12 @@ class Fighter(pygame.sprite.Sprite):
         self.jump_count = 0
         self.jump_max = 1
         self.damage_callbacks = []
+        self.health_callbacks = []
         self.injection_callbacks = []
+        self.update_callbacks = []
+        self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
+        self.injections = [(mutation.MagicalAffinityMutation(), mutation.TranquilityMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = 0
@@ -133,6 +138,9 @@ class Fighter(pygame.sprite.Sprite):
             elif self.anim_frame >= 8:
                 self.sprite = 'still'
                 self.kicking = False
+
+        for cb in self.update_callbacks:
+            cb()
         
         self.anim_frame += 1
         self.jump_frame += 1
@@ -157,6 +165,8 @@ class Fighter(pygame.sprite.Sprite):
         self.kick_sound.play()
     
     def take_damage(self, dmg, direction, kind='physical'):
+        for cb in self.damage_veto_callbacks:
+            dmg = cb(dmg, kind)
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
@@ -165,6 +175,15 @@ class Fighter(pygame.sprite.Sprite):
         # we want a little pushback
         self.pushback = 15 * direction
         self.game.check_state()
+    
+    def increase_health(self, health):
+        if self.health == MAX_HEALTH:
+            return
+        self.health += health
+        if self.health > MAX_HEALTH:
+            self.health = MAX_HEALTH
+        for cb in self.health_callbacks:
+            cb(self.health, health)
     
     def left(self):
         self.speed_x -= 20 * self.speed_multi

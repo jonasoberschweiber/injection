@@ -78,14 +78,33 @@ class WingsMutation(Mutation):
         fighter.jump_max = 1
 
 class TranquilityMutation(Mutation):
+    LIFE_GAINED = 50
+    GAIN_TIME = 160
+
     def __init__(self):
         Mutation.__init__(self, "tranquility")
+    
+    def update(self):
+        if self.frame % self.GAIN_TIME == 0:
+            self.fighter.increase_health(self.LIFE_GAINED)
+        self.frame += 1
+    
+    def damage_veto(self, damage, kind):
+        if kind == 'magic':
+            return 0
+        else:
+            return damage
 
     def activated(self, fighter):
-        pass
+        self.fighter = fighter
+        self.frame = 0
+        fighter.damage_veto_callbacks.append(self.damage_veto)
+        fighter.update_callbacks.append(self.update)
         
     def deactivated(self, fighter):
-        pass
+        if self.damage_veto in fighter.damage_veto_callbacks:
+            fighter.damage_veto_callbacks.remove(self.damage_veto)
+            fighter.update_callbacks.remove(self.update)
 
 class ToxicMutation(Mutation):
     def __init__(self):
