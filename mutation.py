@@ -19,20 +19,48 @@ class Mutation:
         pass
 
 class SwiftFeetMutation(Mutation):
+    DURATION = 200
+
     def __init__(self):
         Mutation.__init__(self, "swiftfeet")
-
-    def activated(self, fighter):
+    
+    def swift(self, fighter):
+        self.count += 1
+        if self.count >= 3:
+            return
         fighter.speed_x *= 2
         fighter.speed_reset_l = fighter.speed_x
         fighter.speed_reset_r = fighter.speed_x
         fighter.speed_multi = 2
+        self.frame = 0
     
-    def deactivated(self, fighter):
+    def deswift(self, fighter):
         fighter.speed_x /= 2
         fighter.speed_reset_l = fighter.speed_x
         fighter.speed_reset_r = fighter.speed_x
         fighter.speed_multi = 1
+        self.frame = -1
+    
+    def update(self):
+        if self.frame >= 0:
+            self.frame += 1
+            if self.frame == self.DURATION:
+                self.deswift(self.fighter)
+
+
+    def activated(self, fighter):
+        self.fighter = fighter
+        self.frame = -1
+        self.count = 0
+        fighter.register_key_sequence('rightright', self.swift)
+        fighter.register_key_sequence('leftleft', self.swift)
+        fighter.update_callbacks.append(self.update)
+    
+    def deactivated(self, fighter):
+        if self.update in fighter.update_callbacks:
+            fighter.update_callbacks.remove(self.update)
+        fighter.deregister_key_sequence('rightright')
+        fighter.deregister_key_sequence('leftleft')
 
 class HundredPercentMoreSpeedMutation(Mutation):
     def __init__(self):
