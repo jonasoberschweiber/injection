@@ -1,17 +1,22 @@
+import random
+
 from fighter import Fighter
 
 class FightingAi:
 	# TODO: 
-	# * The AI is a little fast, give the player some space.
-	# * Punching would be nice.
 	# * When injections are implemented: the AI needs to know about them.
 
 	MOVE_TOWARDS_OPPONENT = 0
 	MOVING_LEFT = 2
 	MOVING_RIGHT = 3
+	EVADE = 4
 	ATTACK_OPPONENT = 1
 
 	REACTION_TIME = 10
+	EVASION_TIME = 20
+
+	PROB_KICK = .5
+	PROB_EVADE = .4
 
 	def __init__(self, game, fighter):
 		self.fighter = fighter
@@ -19,17 +24,21 @@ class FightingAi:
 		self.opponent = self.game.opponent(self.fighter)
 		self.state = self.MOVE_TOWARDS_OPPONENT
 		self.reaction_time = -1
+		self.evasion_frames = -1
+		self.last_evade = 'left'
 		self.state_handlers = {
 			self.MOVE_TOWARDS_OPPONENT: self.move_towards_opponent,
 			self.ATTACK_OPPONENT: self.attack_opponent,
 			self.MOVING_LEFT: self.moving_left,
-			self.MOVING_RIGHT: self.moving_right
+			self.MOVING_RIGHT: self.moving_right,
+			self.EVADE: self.evade
 		}
 		self.state_names = {
 			self.MOVE_TOWARDS_OPPONENT: 'MOVE_TOWARDS_OPPONENT',
 			self.ATTACK_OPPONENT: 'ATTACK_OPPONENT',
 			self.MOVING_LEFT: 'MOVING_LEFT',
-			self.MOVING_RIGHT: 'MOVING_RIGHT'
+			self.MOVING_RIGHT: 'MOVING_RIGHT',
+			self.EVADE: 'EVADE'
 		}
 
 	def distance_to_opponent(self):
@@ -99,4 +108,32 @@ class FightingAi:
 			return
 		if self.fighter.kicking or self.fighter.punching:
 			return
-		self.fighter.kick()
+		r = random.randint(0, 100)
+		if r <= self.PROB_EVADE * 100:
+			self.state = self.EVADE
+			return
+		r = random.randint(0, 100)
+		if r <= self.PROB_KICK * 100:
+			self.fighter.kick()
+		else:
+			self.fighter.punch()
+	
+	def evade(self):
+		dist = self.distance_to_opponent()
+		if self.evasion_frames == -1:
+			if dist < 0:
+				self.fighter.left()
+				self.last_evade = 'left'
+			elif dist > 0:
+				self.fighter.right()
+				self.last_evade = 'right'
+			self.evasion_frames = 0
+		elif self.evasion_frames == self.EVASION_TIME:
+			self.state = self.MOVE_TOWARDS_OPPONENT
+			self.evasion_frames = -1
+			if self.last_evade == 'left':
+				self.fighter.stop_left()
+			else:
+				self.fighter.stop_right()
+		else:
+			self.evasion_frames += 1
