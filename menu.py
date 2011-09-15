@@ -38,8 +38,6 @@ class MainMenu:
                 self.m.surface.blit(self.buttons[i][0][1], self.rect.move(0, i*70))
 
     def btn_singleplayer(self):
-        #self.m.active = False
-        #self.m.game.next_round()
         self.m.current_menu = 2
             
     def btn_multiplayer(self):
@@ -153,10 +151,29 @@ class InjectionMenu:
         elif key == pygame.K_RETURN or key == pygame.K_SPACE:
             if len(self.player1_mutations) < 6:
                 self.add_mutation(player=1)
+            self.check_state()
         elif key == pygame.K_BACKSPACE:
             self.delete_mutation(player=1)
         elif key == pygame.K_ESCAPE:
-            self.m.active = False
+            self.reset()
+            self.m.current_menu = 0
+
+    def reset(self):
+        self.player1_mutations = []
+        self.player2_mutations = []
+        self.selection1 = 0
+        self.selection2 = 0
+
+    def check_state(self):
+        if len(self.player1_mutations) == 6:
+            self.m.game.fighter1.injections = []
+            #self.m.game.fighter2.injections = []
+            for i in range(0, len(self.player1_mutations)):
+                if i % 2:
+                    self.m.game.fighter1.injections.append((tmp_mutation, self.player1_mutations[i], None))
+                else:
+                    tmp_mutation = self.player1_mutations[i]
+            self.m.start_game()
 
     def render(self):
         self.m.surface.fill(pygame.Color(255, 255, 255))
@@ -214,6 +231,12 @@ class Menu:
             if not self.active:
                 break
         pygame.key.set_repeat(0)
+
+    def start_game(self):
+        self.active = False
+        self.game.injectionsbar1.update_injections()
+        self.game.injectionsbar2.update_injections()
+        self.game.next_round()
 
     def render(self):
         self.menus[self.current_menu].render()

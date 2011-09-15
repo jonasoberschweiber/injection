@@ -29,7 +29,10 @@ class InjectionsBar:
         self.fighter = fighter
         self.rect = rect
         self.injections = []
+        self.update_injections()
 
+    def update_injections(self):
+        self.injections = []
         r = pygame.Rect(self.rect.left, self.rect.top, 62, 32)
         for i in range(0, len(self.fighter.injections)):
             if i == self.fighter.current_injection:
