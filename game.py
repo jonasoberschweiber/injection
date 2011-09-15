@@ -7,6 +7,7 @@ from pointsbar import PointsBar
 from injectionsbar import InjectionsBar
 from roundcounter import RoundCounter
 from ai import FightingAi
+from menu import Menu
 
 class Game:
     def __init__(self):
@@ -27,11 +28,13 @@ class Game:
         self.injectionsbar2 = InjectionsBar(self.fighter2, pygame.Rect(695, 50, 300, 27))
         self.roundcounter = RoundCounter(self, pygame.Rect(427, 0, 167, 50))
         self.ai = FightingAi(self, self.fighter2)
+        self.menu = Menu(self)
         self.ignore_keys = False
 
         self.fireballs = []
         pygame.mixer.music.load("snd/music.wav")
         pygame.mixer.music.set_volume(.35)
+        #pygame.mixer.music.set_volume(0)
         pygame.mixer.music.play()
         self.f = self.fighter1
     def ev_quit(self, e):
@@ -122,6 +125,9 @@ class Game:
 
     def main_loop(self):
         while True:
+            if self.menu.active:
+                self.menu.loop()
+
             self.clock.tick(30)
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
@@ -142,7 +148,7 @@ class Game:
             self.injectionsbar1.render(self.surface)
             self.injectionsbar2.render(self.surface)
             self.roundcounter.render(self.surface)
-            self.ai.update()
+            #self.ai.update()
 
             for f in self.fireballs:
                 f.update()

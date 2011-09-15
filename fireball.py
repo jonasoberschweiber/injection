@@ -2,7 +2,7 @@ import pygame
 
 FIREBALL_SPEED = 30
 FIGHTER_OFFSET_Y = 100
-FIREBALL_DAMAGE = 40
+FIREBALL_DAMAGE = 120
 
 class Fireball:
     def __init__(self, game, fighter):

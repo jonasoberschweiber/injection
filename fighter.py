@@ -7,15 +7,17 @@ from fireball import Fireball
 
 import mutation
 
-JUMP_SPEED = -100
-JUMP_DURATION = 10
+GRAVITY = 50
+
+JUMP_SPEED = -90
+JUMP_DURATION = 12
 
 KICK_DAMAGE = 45
 PUNCH_DAMAGE = 35
 
 PUSHBACK_DISTANCE = 10
 
-SEQUENCE_LIMIT = 40
+SEQUENCE_LIMIT = 1000
 
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color, startpos=(0, 0)):
@@ -68,7 +70,7 @@ class Fighter(pygame.sprite.Sprite):
         # if sequence_frame is greater than or equal to SEQUENCE_LIMIT, the key sequence
         # and sequence frame number are reset
         self.sequence_frame = 0
-        self.current_sequence = ''
+        self.current_sequence = []
         self.sequence_listeners = {}
 
         self.switch_to_injection(0)
@@ -93,7 +95,7 @@ class Fighter(pygame.sprite.Sprite):
         return self.game.viewport.real_rect(self.rect)
 
     def update(self):
-        dy = 60
+        dy = GRAVITY
         for platform in self.game.world.obstacles(self):
             if not util.collide_line_top(self.rect, platform):
                 if self.rect.right > platform[0][0] and self.rect.left < platform[1][0]:
@@ -144,7 +146,7 @@ class Fighter(pygame.sprite.Sprite):
         
         self.anim_frame += 1
         self.jump_frame += 1
-        self.sequence_frame += 1
+        self.sequence_frame += 325
         if self.jump_frame > JUMP_DURATION:
             self.jump_count = 0
 
@@ -164,35 +166,39 @@ class Fighter(pygame.sprite.Sprite):
         self.anim_frame = 0
         self.kick_sound.play()
     
-    def take_damage(self, dmg, direction, kind='physical'):
+    def take_damage(self, dmg, direction, kind='physical', pushback_mod=1):
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health, dmg)
         self.hit_sound.play()
         # we want a little pushback
-        self.pushback = PUSHBACK_DISTANCE * direction
+        self.pushback = PUSHBACK_DISTANCE * direction * pushback_mod
         self.game.check_state()
     
     def left(self):
         self.speed_x -= 20 * self.speed_multi
         self.speed_reset_l = -20 * self.speed_multi
         if self.looking_right:
-            self.register_keypress('back')
+            #self.register_keypress('back')
             self.looking_right = False
             self.sprite_map.flip()
         else:
-            self.register_keypress('forward')
+            pass
+            #self.register_keypress('forward')
+        self.register_keypress('left')
     
     def right(self):
         self.speed_x += 20 * self.speed_multi
         self.speed_reset_r = 20 * self.speed_multi
         if not self.looking_right:
-            self.register_keypress('back')
+            #self.register_keypress('back')
             self.looking_right = True
             self.sprite_map.flip()
         else:
-            self.register_keypress('forward')
+            pass
+            #self.register_keypress('forward')
+        self.register_keypress('right')
 
     def stop_left(self):
         self.speed_x -= self.speed_reset_l
@@ -238,12 +244,22 @@ class Fighter(pygame.sprite.Sprite):
 
     def register_keypress(self, key):
         if self.sequence_frame < SEQUENCE_LIMIT:
-            self.current_sequence += key
-            if self.sequence_listeners.has_key(self.current_sequence):
-                self.sequence_listeners[self.current_sequence](self)
+            #self.current_sequence += key
+            self.current_sequence.append(key)
+            
+            pos = 0
+            for pos in range(0, len(self.current_sequence)):
+                if self.sequence_listeners.has_key("".join(self.current_sequence[pos:])):
+                    self.sequence_listeners["".join(self.current_sequence[pos:])](self)
+                    break
+
+            #if self.sequence_listeners.has_key(self.current_sequence):
+            #    self.sequence_listeners[self.current_sequence](self)
+            self.sequence_frame = 0
         else:
             self.sequence_frame = 0
-            self.current_sequence = key
+            self.current_sequence = [key]
+        print self.current_sequence
     
     def register_key_sequence(self, sequence, listener):
         self.sequence_listeners[sequence] = listener

@@ -52,10 +52,12 @@ class MagicalAffinityMutation(Mutation):
         fighter.game.fireballs.append(Fireball(fighter.game, fighter))
 
     def activated(self, fighter):
-        fighter.register_key_sequence('forwardforwardpunch', self.fireball)
+        fighter.register_key_sequence('rightrightpunch', self.fireball)
+        fighter.register_key_sequence('leftleftpunch', self.fireball)
 
     def deactivated(self, fighter):
-        fighter.deregister_key_sequence('forwardforwardpunch')
+        fighter.deregister_key_sequence('rightrightpunch')
+        fighter.deregister_key_sequence('leftleftpunch')
 
 class HardenedSkinMutation(Mutation):
     def __init__(self):
