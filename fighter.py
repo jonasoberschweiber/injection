@@ -56,7 +56,7 @@ class Fighter(pygame.sprite.Sprite):
         self.update_callbacks = []
         self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.TranquilityMutation(), mutation.MagicalAffinityMutation(), None),
+        self.injections = [(mutation.TranquilityMutation(), mutation.ToxicMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = -1 
@@ -181,7 +181,7 @@ class Fighter(pygame.sprite.Sprite):
         dmg = int((1 - self.damage_reduction) * dmg)
         self.health -= dmg
         for cb in self.damage_callbacks:
-            cb(self.health, dmg)
+            cb(self.health, dmg, kind)
         self.hit_sound.play()
         # we want a little pushback
         self.pushback = PUSHBACK_DISTANCE * direction * pushback_mod

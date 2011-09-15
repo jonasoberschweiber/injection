@@ -30,7 +30,7 @@ class PointsBar:
         self.animation_health = self.health
         self.health = new_health
 
-    def damage_taken(self, new_health, dmg):
+    def damage_taken(self, new_health, dmg, kind):
         self.animation_health = self.health
         self.health = new_health
         self.animation = True

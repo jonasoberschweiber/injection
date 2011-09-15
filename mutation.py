@@ -116,12 +116,13 @@ class ToxicMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "toxic")
 
-    def opponent_damage_taken(self, health, dmg):
-        if not self.opponent_update in self.opponent.update_callbacks:
+    def opponent_damage_taken(self, health, dmg, kind):
+        if not self.opponent_update in self.opponent.update_callbacks and kind == 'physical':
             self.frame = 0
             self.opponent.update_callbacks.append(self.opponent_update)
     
     def opponent_update(self):
+        print self.frame, self.DAMAGE_FOR
         if self.frame == self.DAMAGE_FOR:
             self.opponent.update_callbacks.remove(self.opponent_update)
         if self.frame % self.DAMAGE_EVERY == 0:
