@@ -30,7 +30,9 @@ class Game:
         self.ignore_keys = False
 
         self.fireballs = []
-
+        pygame.mixer.music.load("snd/music.wav")
+        pygame.mixer.music.set_volume(.35)
+        pygame.mixer.music.play()
         self.f = self.fighter1
     def ev_quit(self, e):
         pass
