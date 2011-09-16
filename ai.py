@@ -58,6 +58,8 @@ class FightingAi:
 		self.evasion_frames = -1
 	
 	def opponent_changed_injection(self, old_injection, new_injection):
+		if self.fighter.current_injection >= 2:
+			return
 		wanted = []
 		for mut in self.opponent.injections[new_injection]:
 			if mut == None:
@@ -65,7 +67,8 @@ class FightingAi:
 			if self.mutation_counters.has_key(mut.name):
 				wanted.append(self.mutation_counters[mut.name])
 		wanted = [w for w in wanted if w not in self.fighter.injections[self.fighter.current_injection]]
-		print wanted
+		if any([w in self.fighter.injections[self.fighter.current_injection + 1] for w in wanted]):
+			self.fighter.switch_to_injection(self.fighter.current_injection + 1)
 
 	def distance_to_opponent(self):
 		return self.opponent.rect.x - self.fighter.rect.x
