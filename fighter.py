@@ -23,8 +23,8 @@ SEQUENCE_LIMIT = 5
 
 MAX_HEALTH = 1000
 
-BLOCK_DURATION = 20
-BLOCK_DELAY = 50
+BLOCK_DURATION = 8
+BLOCK_DELAY = 30
 
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color, startpos=(0, 0)):
@@ -228,7 +228,8 @@ class Fighter(pygame.sprite.Sprite):
         if self.hit_sounds[sound]:
             self.hit_sounds[sound].play()
         # we want a little pushback
-        self.pushback = PUSHBACK_DISTANCE * direction * pushback_mod
+        if not self.blocking:
+            self.pushback = PUSHBACK_DISTANCE * direction * pushback_mod
         self.game.check_state()
     
     def increase_health(self, health):
