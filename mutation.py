@@ -151,7 +151,6 @@ class ToxicMutation(Mutation):
             self.opponent.update_callbacks.append(self.opponent_update)
     
     def opponent_update(self):
-        print self.frame, self.DAMAGE_FOR
         if self.frame == self.DAMAGE_FOR:
             self.opponent.update_callbacks.remove(self.opponent_update)
         if self.frame % self.DAMAGE_EVERY == 0:

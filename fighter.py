@@ -9,13 +9,15 @@ import mutation
 
 GRAVITY = 50
 
-JUMP_SPEED = -90
-JUMP_DURATION = 12
+JUMP_SPEED = -85
+JUMP_DURATION = 13
+
+WALK_SPEED = 15
 
 KICK_DAMAGE = 45
 PUNCH_DAMAGE = 35
 
-PUSHBACK_DISTANCE = 10
+PUSHBACK_DISTANCE = 15
 
 SEQUENCE_LIMIT = 5
 
@@ -56,7 +58,7 @@ class Fighter(pygame.sprite.Sprite):
         self.update_callbacks = []
         self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.MagicalAffinityMutation(), mutation.ToxicMutation(), None),
+        self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = -1 
@@ -81,6 +83,10 @@ class Fighter(pygame.sprite.Sprite):
     def render(self, surface):
         off = self.sprite_map.offset(self.sprite)
         rect = self.game.viewport.real_rect(self.rect)
+        hb = self.hit_boxes()
+        #for b in hb:
+        #    rb = self.game.viewport.real_rect(b)
+        #    pygame.draw.rect(surface, pygame.Color(0,0,0,255), rb, 1)
         if off != 0:
             rect = pygame.Rect(rect.x - off, rect.y, rect.w + off, rect.h)
         surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
@@ -89,7 +95,7 @@ class Fighter(pygame.sprite.Sprite):
         return self.sprite_map.mask(self.sprite)
     
     def _hit_boxes(self, rect):
-        return [x.move(rect.x, rect.y) for x in self.mask().get_bounding_rects()]
+        return [x.move(rect.x, rect.y) for x in self.sprite_map.hit_boxes(self.sprite)]
     
     def hit_boxes(self):
         return self._hit_boxes(self.rect)
@@ -123,7 +129,7 @@ class Fighter(pygame.sprite.Sprite):
             if self.pushback > 0:
                 self.pushback -= 1
             elif self.pushback < 0:
-                self.pushback = 0
+                self.pushback += 1
 
         if not self.game.viewport.can_move(self, new_rect):
             new_rect.left = self.rect.left
@@ -204,8 +210,8 @@ class Fighter(pygame.sprite.Sprite):
             cb(self.health, health)
     
     def left(self):
-        self.speed_x -= 20 * self.speed_multi
-        self.speed_reset_l = -20 * self.speed_multi
+        self.speed_x -= WALK_SPEED * self.speed_multi
+        self.speed_reset_l = -1 * WALK_SPEED * self.speed_multi
         if self.looking_right:
             #self.register_keypress('back')
             self.looking_right = False
@@ -216,8 +222,8 @@ class Fighter(pygame.sprite.Sprite):
         self.register_keypress('left')
     
     def right(self):
-        self.speed_x += 20 * self.speed_multi
-        self.speed_reset_r = 20 * self.speed_multi
+        self.speed_x += WALK_SPEED * self.speed_multi
+        self.speed_reset_r = WALK_SPEED * self.speed_multi
         if not self.looking_right:
             #self.register_keypress('back')
             self.looking_right = True

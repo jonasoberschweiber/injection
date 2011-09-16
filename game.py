@@ -131,7 +131,6 @@ class Game:
                 self.menu.loop()
 
             self.clock.tick(30)
-            print self.clock.get_fps()
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     self.ev_quit(e)
