@@ -3,11 +3,11 @@ import pygame
 class RoundCounter:
     def __init__(self, game, rect):
         self.game = game
-        self.rounds = (pygame.image.load("gfx/round1.png"),
-                       pygame.image.load("gfx/round2.png"), 
-                       pygame.image.load("gfx/round3.png"))
-        self.img_ready = pygame.image.load("gfx/ready.png")
-        self.img_go = pygame.image.load("gfx/go.png")
+        self.rounds = (pygame.image.load("gfx/round1.png").convert_alpha(),
+                       pygame.image.load("gfx/round2.png").convert_alpha(), 
+                       pygame.image.load("gfx/round3.png").convert_alpha())
+        self.img_ready = pygame.image.load("gfx/ready.png").convert_alpha()
+        self.img_go = pygame.image.load("gfx/go.png").convert_alpha()
         self.snd_newround = pygame.mixer.Sound("snd/new_round.wav")
         self.round = -1
         self.rect = rect

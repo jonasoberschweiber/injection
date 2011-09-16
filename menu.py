@@ -5,11 +5,11 @@ from mutation import *
 class MainMenu:
     def __init__(self, m):
         self.m = m
-        self.img_title = pygame.image.load("gfx/menu_title.png")
-        self.img_singleplayer = (pygame.image.load("gfx/btn_singleplayer.png"), pygame.image.load("gfx/btn_singleplayer_inactive.png"))
-        self.img_multiplayer = (pygame.image.load("gfx/btn_multiplayer.png"), pygame.image.load("gfx/btn_multiplayer_inactive.png"))
-        self.img_help = (pygame.image.load("gfx/btn_help.png"), pygame.image.load("gfx/btn_help_inactive.png"))
-        self.img_exit = (pygame.image.load("gfx/btn_exit.png"), pygame.image.load("gfx/btn_exit_inactive.png"))
+        self.img_title = pygame.image.load("gfx/menu_title.png").convert_alpha()
+        self.img_singleplayer = (pygame.image.load("gfx/btn_singleplayer.png").convert_alpha(), pygame.image.load("gfx/btn_singleplayer_inactive.png").convert_alpha())
+        self.img_multiplayer = (pygame.image.load("gfx/btn_multiplayer.png").convert_alpha(), pygame.image.load("gfx/btn_multiplayer_inactive.png").convert_alpha())
+        self.img_help = (pygame.image.load("gfx/btn_help.png").convert_alpha(), pygame.image.load("gfx/btn_help_inactive.png").convert_alpha())
+        self.img_exit = (pygame.image.load("gfx/btn_exit.png").convert_alpha(), pygame.image.load("gfx/btn_exit_inactive.png").convert_alpha())
 
         self.buttons = [(self.img_singleplayer, self.btn_singleplayer),
                         (self.img_multiplayer, self.btn_multiplayer),
@@ -52,7 +52,7 @@ class MainMenu:
 class HelpMenu:
     def __init__(self, m):
         self.m = m
-        self.help_image = pygame.image.load("gfx/injections.png")
+        self.help_image = pygame.image.load("gfx/injections.png").convert_alpha()
         self.rect = self.help_image.get_rect()
 
     def key_press(self, key):
@@ -77,11 +77,11 @@ class InjectionMenu:
                                      ToxicMutation()]
         self.selection1 = 0
         self.selection2 = 0
-        self.img_avail_inj = pygame.image.load("gfx/injmenu/available_injections.png")
-        self.img_your_inj = pygame.image.load("gfx/injmenu/yourinjections.png")
-        self.img_ready = pygame.image.load("gfx/injmenu/ready.png")
-        self.img_selection = pygame.image.load("gfx/injmenu/selection.png")
-        self.img_mut_separator = pygame.image.load("gfx/mutation_separator.png")
+        self.img_avail_inj = pygame.image.load("gfx/injmenu/available_injections.png").convert_alpha()
+        self.img_your_inj = pygame.image.load("gfx/injmenu/yourinjections.png").convert_alpha()
+        self.img_ready = pygame.image.load("gfx/injmenu/ready.png").convert_alpha()
+        self.img_selection = pygame.image.load("gfx/injmenu/selection.png").convert_alpha()
+        self.img_mut_separator = pygame.image.load("gfx/mutation_separator.png").convert_alpha()
         self.injections_rect1 = pygame.Rect(50, 130, 0, 0)
         self.injections_rect2 = pygame.Rect(565, 130, 0, 0)
         self.player1_mutations = []

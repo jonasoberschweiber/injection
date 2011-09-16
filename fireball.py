@@ -9,8 +9,8 @@ class Fireball:
         self.game = game
         self.fighter = fighter
 
-        self.big = pygame.image.load('gfx/fireball01.png')
-        self.slim = pygame.image.load('gfx/fireball02.png')
+        self.big = pygame.image.load('gfx/fireball01.png').convert_alpha()
+        self.slim = pygame.image.load('gfx/fireball02.png').convert_alpha()
 
         self.image = self.big
 

@@ -4,8 +4,8 @@ class Injection:
     def __init__(self, mutations, rect, active=0):
         self.mutations = mutations
         self.rect = rect
-        self.separator = pygame.image.load("gfx/mutation_separator.png")
-        self.separator_trans = pygame.image.load("gfx/mutation_separator_trans.png")
+        self.separator = pygame.image.load("gfx/mutation_separator.png").convert_alpha()
+        self.separator_trans = pygame.image.load("gfx/mutation_separator_trans.png").convert_alpha()
         self.active = active
         self.disabled = False
 

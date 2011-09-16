@@ -17,7 +17,7 @@ PUNCH_DAMAGE = 35
 
 PUSHBACK_DISTANCE = 10
 
-SEQUENCE_LIMIT = 1000
+SEQUENCE_LIMIT = 5
 
 MAX_HEALTH = 1000
 
@@ -161,7 +161,7 @@ class Fighter(pygame.sprite.Sprite):
         
         self.anim_frame += 1
         self.jump_frame += 1
-        self.sequence_frame += 325
+        self.sequence_frame += 1
         if self.jump_frame > JUMP_DURATION:
             self.jump_count = 0
 

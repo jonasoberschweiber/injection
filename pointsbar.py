@@ -7,12 +7,12 @@ class PointsBar:
         self.fighter = fighter
         self.rect = rect
         self.health = 1000
-        self.background = pygame.image.load("gfx/hpbar-bg.png")
+        self.background = pygame.image.load("gfx/hpbar-bg.png").convert_alpha()
 
         if color == 1:
-            self.bar = pygame.image.load("gfx/hpbar_blue.png")
+            self.bar = pygame.image.load("gfx/hpbar_blue.png").convert_alpha()
         else:
-            self.bar = pygame.image.load("gfx/hpbar_red.png")
+            self.bar = pygame.image.load("gfx/hpbar_red.png").convert_alpha()
         self.num_font = pygame.font.Font(pygame.font.get_default_font(), 16)
         self.num_color = pygame.Color(255, 0, 0)
         self.gain_color = pygame.Color(0, 255, 0)

@@ -9,6 +9,8 @@ from roundcounter import RoundCounter
 from ai import FightingAi
 from menu import Menu
 
+import cProfile
+
 class Game:
     def __init__(self):
         pygame.mixer.pre_init(frequency=22050, size=-16, channels=8, buffer=256)
@@ -16,7 +18,7 @@ class Game:
         pygame.display.set_caption("Injection")
         pygame.mixer.init()
         self.clock = pygame.time.Clock()
-        self.surface = pygame.display.set_mode((1024, 768), pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.surface = pygame.display.set_mode((1024, 768), pygame.DOUBLEBUF)
         self.viewport = Viewport(self)
         self.world = World(self, "gfx/world01.json")
         self.fighter1 = Fighter(self, pygame.Color(0, 0, 200, 255), startpos=(50, 0))
@@ -129,6 +131,7 @@ class Game:
                 self.menu.loop()
 
             self.clock.tick(30)
+            print self.clock.get_fps()
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     self.ev_quit(e)
@@ -157,4 +160,4 @@ class Game:
             pygame.display.flip()
 
 if __name__ == "__main__":
-    Game().main_loop()
+    cProfile.run('Game().main_loop()')

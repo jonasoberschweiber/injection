@@ -10,9 +10,9 @@ class SpriteMap:
 		self.flipped = False
 		self.properties = json.loads(open(property_file).read()) 
 		if filter != None:
-			self.map = filter(pygame.image.load(self.properties['map']))
+			self.map = filter(pygame.image.load(self.properties['map']).convert_alpha())
 		else:
-			self.map = pygame.image.load(self.properties['map'])
+			self.map = pygame.image.load(self.properties['map']).convert_alpha()
 		self.build_flipped_map()
 		self.build_masks()
 

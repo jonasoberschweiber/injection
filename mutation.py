@@ -4,13 +4,13 @@ from fireball import Fireball
 
 class Mutation:
     def __init__(self, s):
-        self.image_full = pygame.image.load("gfx/mutations/%s_full.png" % s)
-        self.image_left = pygame.image.load("gfx/mutations/%s_left.png" % s)
-        self.image_right = pygame.image.load("gfx/mutations/%s_right.png" % s)
-        self.image_left_inactive = pygame.image.load("gfx/mutations/%s_left_inactive.png" % s)
-        self.image_right_inactive = pygame.image.load("gfx/mutations/%s_right_inactive.png" % s)
-        self.image_left_disabled = pygame.image.load("gfx/mutations/%s_left_disabled.png" % s)
-        self.image_right_disabled = pygame.image.load("gfx/mutations/%s_right_disabled.png" % s)
+        self.image_full = pygame.image.load("gfx/mutations/%s_full.png" % s).convert_alpha()
+        self.image_left = pygame.image.load("gfx/mutations/%s_left.png" % s).convert_alpha()
+        self.image_right = pygame.image.load("gfx/mutations/%s_right.png" % s).convert_alpha()
+        self.image_left_inactive = pygame.image.load("gfx/mutations/%s_left_inactive.png" % s).convert_alpha()
+        self.image_right_inactive = pygame.image.load("gfx/mutations/%s_right_inactive.png" % s).convert_alpha()
+        self.image_left_disabled = pygame.image.load("gfx/mutations/%s_left_disabled.png" % s).convert_alpha()
+        self.image_right_disabled = pygame.image.load("gfx/mutations/%s_right_disabled.png" % s).convert_alpha()
         self.name = s
         
     def activated(self, fighter):

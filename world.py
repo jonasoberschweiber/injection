@@ -6,15 +6,15 @@ class World:
     def __init__(self, game, worldfile):
         self.game = game
         self.data = json.loads(open(worldfile).read())
-        self.background = pygame.image.load(self.data['bg'])
+        self.background = pygame.image.load(self.data['bg']).convert_alpha()
         self.offset = (0, 0)
         self.platforms = [((x[0], x[1]), (x[2], x[3])) for x in self.data['platforms']]
+        self.rect = self.background.get_rect()
 
     def render(self, surface):
-        area = self.background.get_rect()
-        area.left = self.game.viewport.offset
+        self.rect.left = self.game.viewport.offset
 
-        surface.blit(self.background, (0, 0), area)
+        surface.blit(self.background, (0, 0), self.rect)
 
     def obstacles(self, caller):
         obstacles = self.platforms
