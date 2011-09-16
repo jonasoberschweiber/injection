@@ -11,6 +11,7 @@ class Mutation:
         self.image_right_inactive = pygame.image.load("gfx/mutations/%s_right_inactive.png" % s)
         self.image_left_disabled = pygame.image.load("gfx/mutations/%s_left_disabled.png" % s)
         self.image_right_disabled = pygame.image.load("gfx/mutations/%s_right_disabled.png" % s)
+        self.name = s
         
     def activated(self, fighter):
         pass

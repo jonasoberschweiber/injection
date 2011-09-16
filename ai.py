@@ -12,11 +12,15 @@ class FightingAi:
 	EVADE = 4
 	ATTACK_OPPONENT = 1
 
-	REACTION_TIME = 35 
+	REACTION_TIME = 50 
 	EVASION_TIME = 20
 
 	PROB_KICK = .5
 	PROB_EVADE = .2
+	PROB_SWITCH_NO_REASON = .05
+
+	PROB_FIREBALL = .1
+	PROB_FIREBALL_SUCCESS = .05
 
 	def __init__(self, game, fighter):
 		self.fighter = fighter
@@ -26,6 +30,7 @@ class FightingAi:
 		self.reaction_time = -1
 		self.evasion_frames = -1
 		self.last_evade = 'left'
+		self.opponent.injection_callbacks.append(self.opponent_changed_injection)
 		self.state_handlers = {
 			self.MOVE_TOWARDS_OPPONENT: self.move_towards_opponent,
 			self.ATTACK_OPPONENT: self.attack_opponent,
@@ -40,11 +45,27 @@ class FightingAi:
 			self.MOVING_RIGHT: 'MOVING_RIGHT',
 			self.EVADE: 'EVADE'
 		}
+		self.mutation_counters = {
+			'magicalaffinity': 'tranquility',
+			'strength': 'hardenedskin',
+			'toxic': 'tranquility',
+			'swiftfeet': 'swiftfeet',
+			'wings': 'swiftfeet',
+		}
 	
 	def reset(self):
-		print 'reset'
 		self.reaction_time = -1
 		self.evasion_frames = -1
+	
+	def opponent_changed_injection(self, old_injection, new_injection):
+		wanted = []
+		for mut in self.opponent.injections[new_injection]:
+			if mut == None:
+				continue
+			if self.mutation_counters.has_key(mut.name):
+				wanted.append(self.mutation_counters[mut.name])
+		wanted = [w for w in wanted if w not in self.fighter.injections[self.fighter.current_injection]]
+		print wanted
 
 	def distance_to_opponent(self):
 		return self.opponent.rect.x - self.fighter.rect.x
@@ -53,8 +74,18 @@ class FightingAi:
 		#print self.state_names[self.state], self.distance_to_opponent()
 		self.state_handlers[self.state]()
 
+		r = random.randint(0, 100)
+		if r <= self.PROB_FIREBALL * 100 and 'magicalaffinity' in self.fighter.injection_names():
+			r = random.randint(0, 100)
+			if r <= self.PROB_FIREBALL_SUCCESS * 100:
+				self.fighter.fireball()
+			return
+
 	def move_towards_opponent(self):
 		dist = self.distance_to_opponent()
+		r = random.randint(0, 100)
+		if r <= self.PROB_SWITCH_NO_REASON * 100 and self.fighter.current_injection < 2:
+			self.fighter.switch_to_injection(self.fighter.current_injection + 1)
 		if abs(dist) < 20:
 			self.state = self.ATTACK_OPPONENT
 			return

@@ -56,7 +56,7 @@ class Fighter(pygame.sprite.Sprite):
         self.update_callbacks = []
         self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.SwiftFeetMutation(), mutation.ToxicMutation(), None),
+        self.injections = [(mutation.MagicalAffinityMutation(), mutation.ToxicMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = -1 
@@ -93,9 +93,15 @@ class Fighter(pygame.sprite.Sprite):
     
     def hit_boxes(self):
         return self._hit_boxes(self.rect)
+    
+    def fireball(self):
+        self.game.fireballs.append(Fireball(self.game, self))
 
     def real_rect(self):
         return self.game.viewport.real_rect(self.rect)
+    
+    def injection_names(self):
+        return [x.name for x in self.injections[self.current_injection] if x != None]
 
     def update(self):
         dy = GRAVITY
