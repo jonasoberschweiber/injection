@@ -66,6 +66,9 @@ class SpriteMap:
             return self.flipped_boxes[name]
         else:
             return self.normal_boxes[name]
+    
+    def offset_y(self, name):
+        return self.properties['sprites'][name]['offset_y']
 
     def offset(self, name):
         sprite = self.properties['sprites'][name]

@@ -50,6 +50,8 @@ class Game:
             self.f.right()
         elif e.key == pygame.K_LEFT:
             self.f.left()
+        elif e.key == pygame.K_DOWN:
+            self.f.block()
         elif e.key == pygame.K_SPACE:
             self.f.jump()
         elif e.unicode == 'm':

@@ -23,6 +23,9 @@ SEQUENCE_LIMIT = 5
 
 MAX_HEALTH = 1000
 
+BLOCK_DURATION = 20
+BLOCK_DELAY = 50
+
 class Fighter(pygame.sprite.Sprite):
     def __init__(self, game, color, startpos=(0, 0)):
         pygame.sprite.Sprite.__init__(self)
@@ -48,6 +51,9 @@ class Fighter(pygame.sprite.Sprite):
         self.health = MAX_HEALTH
         self.punching = False
         self.kicking = False
+        self.blocking = False
+        self.block_delay = 0
+        self.block_frame = -1
         self.anim_frame = 0
         self.jump_frame = 0
         self.jump_count = 0
@@ -87,8 +93,14 @@ class Fighter(pygame.sprite.Sprite):
         #for b in hb:
         #    rb = self.game.viewport.real_rect(b)
         #    pygame.draw.rect(surface, pygame.Color(0,0,0,255), rb, 1)
+        rect.x -= off
+        rect.w += off
+        if self.blocking:
+            erect = pygame.Rect(rect.x, rect.y + self.sprite_map.offset_y(self.sprite),
+                rect.w, rect.h)
+            pygame.draw.ellipse(surface, pygame.Color(0, 255, 0, 200), erect, 5)
         if off != 0:
-            rect = pygame.Rect(rect.x - off, rect.y, rect.w + off, rect.h)
+            rect = pygame.Rect(rect.x, rect.y, rect.w, rect.h)
         surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
 
     def mask(self):
@@ -165,14 +177,21 @@ class Fighter(pygame.sprite.Sprite):
         for cb in self.update_callbacks:
             cb()
         
+        if self.block_frame > BLOCK_DURATION:
+            self.block_frame = -1
+            self.blocking = False
+        
         self.anim_frame += 1
         self.jump_frame += 1
         self.sequence_frame += 1
+        self.block_delay += 1
+        if self.blocking:
+            self.block_frame += 1
         if self.jump_frame > JUMP_DURATION:
             self.jump_count = 0
 
     def punch(self):
-        if self.punching or self.kicking or self.pushback > 0:
+        if self.active():
             return
         self.register_keypress('punch')
         self.punching = True
@@ -180,17 +199,29 @@ class Fighter(pygame.sprite.Sprite):
         self.punch_sound.play()
     
     def kick(self):
-        if self.punching or self.kicking or self.pushback > 0:
+        if self.active():
             return
         self.register_keypress('kick')
         self.kicking = True
         self.anim_frame = 0
         self.kick_sound.play()
     
+    def active(self):
+        return self.blocking or self.punching or self.kicking or self.pushback > 0
+    
+    def block(self):
+        if self.active() or self.block_delay < BLOCK_DELAY:
+            return
+        self.block_delay = 0
+        self.block_frame = 0
+        self.blocking = True
+    
     def take_damage(self, dmg, direction, kind='physical', sound=0, pushback_mod=1):
         for cb in self.damage_veto_callbacks:
             dmg = cb(dmg, kind)
         dmg = int((1 - self.damage_reduction) * dmg)
+        if self.blocking:
+            dmg = 0
         self.health -= dmg
         for cb in self.damage_callbacks:
             cb(self.health, dmg, kind)
