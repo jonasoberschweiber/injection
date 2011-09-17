@@ -24,7 +24,7 @@ class SwiftFeetMutation(Mutation):
 
     def __init__(self):
         Mutation.__init__(self, "swiftfeet")
-        self.frame = 0
+        self.frame = -1
     
     def swift(self, fighter):
         self.count += 1
@@ -63,6 +63,7 @@ class SwiftFeetMutation(Mutation):
             fighter.update_callbacks.remove(self.update)
         fighter.deregister_key_sequence('rightright')
         fighter.deregister_key_sequence('leftleft')
+        print 'about to deswift', self.frame
         if self.frame >= 0:
             self.deswift(fighter)
 
@@ -88,18 +89,18 @@ class MagicalAffinityMutation(Mutation):
         fighter.register_key_sequence('leftpunchpunch', self.fireball)
 
     def deactivated(self, fighter):
-        fighter.deregister_key_sequence('rightrightpunch')
-        fighter.deregister_key_sequence('leftleftpunch')
+        fighter.deregister_key_sequence('rightpunchpunch')
+        fighter.deregister_key_sequence('leftpunchpunch')
 
 class HardenedSkinMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "hardenedskin")
 
     def activated(self, fighter):
-        fighter.damage_reduction += .4
+        fighter.damage_reduction += .33
 
     def deactivated(self, fighter):
-        fighter.damage_reduction -= .4
+        fighter.damage_reduction -= .33
 
 class WingsMutation(Mutation):
     def __init__(self):
@@ -112,7 +113,7 @@ class WingsMutation(Mutation):
         fighter.jump_max = 1
 
 class TranquilityMutation(Mutation):
-    LIFE_GAINED = 50
+    LIFE_GAINED = 35
     GAIN_TIME = 160
 
     def __init__(self):
@@ -137,11 +138,12 @@ class TranquilityMutation(Mutation):
         
     def deactivated(self, fighter):
         if self.damage_veto in fighter.damage_veto_callbacks:
+            print 'removing tranq'
             fighter.damage_veto_callbacks.remove(self.damage_veto)
             fighter.update_callbacks.remove(self.update)
 
 class ToxicMutation(Mutation):
-    DAMAGE = 10
+    DAMAGE = 15
     DAMAGE_EVERY = 10
     DAMAGE_FOR = 50
 
@@ -154,7 +156,7 @@ class ToxicMutation(Mutation):
             self.opponent.update_callbacks.append(self.opponent_update)
     
     def opponent_update(self):
-        if self.frame == self.DAMAGE_FOR:
+        if self.frame == self.DAMAGE_FOR and self.opponent_update in self.opponent.update_callbacks:
             self.opponent.update_callbacks.remove(self.opponent_update)
         if self.frame % self.DAMAGE_EVERY == 0:
             self.opponent.take_damage(self.DAMAGE, 0, 'magical', 1)
@@ -168,15 +170,18 @@ class ToxicMutation(Mutation):
     def deactivated(self, fighter):
         if not hasattr(self, 'opponent'):
             return
+        print 'removing toxicity'
         if self.opponent_damage_taken in self.opponent.damage_callbacks:
             self.opponent.damage_callbacks.remove(self.opponent_damage_taken)
+        if self.opponent_update in self.opponent.update_callbacks:
+            self.opponent.update_callbacks.remove(self.opponent_update)
 
 class StrengthMutation(Mutation):
     def __init__(self):
         Mutation.__init__(self, "strength")
 
     def activated(self, fighter):
-        fighter.damage_modifier += .4
+        fighter.damage_modifier += .3
 
     def deactivated(self, fighter):
-        fighter.damage_modifier -= .4
+        fighter.damage_modifier -= .3
