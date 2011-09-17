@@ -113,7 +113,7 @@ class Game:
             opp = self.fighter1
         return opp
 
-    def hit_opponent(self, caller, damage, hit_boxes=None):
+    def hit_opponent(self, caller, damage, hit_boxes=None, kind='physical'):
         opp = self.opponent(caller)
         opp_hb = opp.hit_boxes()
         direction = 1
@@ -122,7 +122,7 @@ class Game:
         if hit_boxes == None:
             hit_boxes = caller.hit_boxes()
         if any([x.collidelist(opp_hb) != -1 for x in hit_boxes]):
-            opp.take_damage(damage, direction)
+            opp.take_damage(damage, direction, kind=kind)
             return True
         return False
 

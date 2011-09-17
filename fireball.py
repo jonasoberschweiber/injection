@@ -2,7 +2,7 @@ import pygame
 
 FIREBALL_SPEED = 30
 FIGHTER_OFFSET_Y = 100
-FIREBALL_DAMAGE = 120
+FIREBALL_DAMAGE = 90
 
 class Fireball:
     def __init__(self, game, fighter):
@@ -39,5 +39,5 @@ class Fireball:
         self.frame += 1
 
         if self.game.hit_opponent(self.fighter, FIREBALL_DAMAGE, [pygame.Rect(self.pos[0], self.pos[1],
-            self.image.get_width(), self.image.get_height())]):
+            self.image.get_width(), self.image.get_height())], kind='magical'):
             self.game.fireballs.remove(self)
