@@ -152,7 +152,8 @@ class Game:
             self.injectionsbar1.render(self.surface)
             self.injectionsbar2.render(self.surface)
             self.roundcounter.render(self.surface)
-            self.ai.update()
+            if not self.ignore_keys:
+                self.ai.update()
 
             for f in self.fireballs:
                 f.update()
