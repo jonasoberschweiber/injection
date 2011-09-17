@@ -23,9 +23,13 @@ class MainMenu:
         if key == pygame.K_DOWN:
             if self.current_button < len(self.buttons) - 1:
                 self.current_button += 1
+            elif self.current_button == len(self.buttons) - 1:
+                self.current_button = 0
         elif key == pygame.K_UP:
             if self.current_button > 0:
                 self.current_button -= 1
+            elif self.current_button == 0:
+                self.current_button = len(self.buttons) - 1
         elif key == pygame.K_RETURN or key == pygame.K_SPACE or key == pygame.K_RIGHT:
             self.buttons[self.current_button][1]()
     
@@ -276,3 +280,7 @@ class Menu:
 
     def render(self):
         self.menus[self.current_menu].render()
+
+    def activate(self):
+        self.active = True
+        self.current_menu = 0
