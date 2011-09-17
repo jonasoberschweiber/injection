@@ -180,6 +180,8 @@ class Game:
     def main_loop(self):
         while True:
             if self.menu.active:
+                self.fighter1.reset()
+                self.fighter2.reset()
                 self.menu.loop()
 
             self.clock.tick(30)

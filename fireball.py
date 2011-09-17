@@ -38,6 +38,10 @@ class Fireball:
         
         self.frame += 1
 
+        if self.pos[0] > self.game.world.rect.width:
+            self.game.fireballs.remove(self)
+            return
+
         if self.game.hit_opponent(self.fighter, FIREBALL_DAMAGE, [pygame.Rect(self.pos[0], self.pos[1],
             self.image.get_width(), self.image.get_height())], kind='magical'):
             self.game.fireballs.remove(self)

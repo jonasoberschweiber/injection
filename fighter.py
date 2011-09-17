@@ -309,7 +309,11 @@ class Fighter(pygame.sprite.Sprite):
         self.speed_reset_r = 0
         self.rect.left = self.start_pos[0]
         self.rect.top = self.start_pos[1]
-        self.switch_to_injection(0)
+        if self.current_injection != -1:
+            for m in self.injections[self.current_injection]:
+                if m != None:
+                    m.deactivated(self)
+            self.current_injection = -1
         if self.rect.left < self.game.opponent(self).rect.left:
             if not self.looking_right:
                 self.sprite_map.flip()

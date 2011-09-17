@@ -64,7 +64,7 @@ class SwiftFeetMutation(Mutation):
         fighter.deregister_key_sequence('rightright')
         fighter.deregister_key_sequence('leftleft')
         print 'about to deswift', self.frame
-        if self.frame >= 0:
+        if fighter.speed_multi > 1:
             self.deswift(fighter)
 
 class HundredPercentMoreSpeedMutation(Mutation):
@@ -107,9 +107,11 @@ class WingsMutation(Mutation):
         Mutation.__init__(self, "wings")
 
     def activated(self, fighter):
+        print 'wings activated'
         fighter.jump_max = 2
 
     def deactivated(self, fighter):
+        print 'wigns deactivated'
         fighter.jump_max = 1
 
 class TranquilityMutation(Mutation):
@@ -156,7 +158,7 @@ class ToxicMutation(Mutation):
             self.opponent.update_callbacks.append(self.opponent_update)
     
     def opponent_update(self):
-        if self.frame == self.DAMAGE_FOR and self.opponent_update in self.opponent.update_callbacks:
+        if self.frame >= self.DAMAGE_FOR and self.opponent_update in self.opponent.update_callbacks:
             self.opponent.update_callbacks.remove(self.opponent_update)
         if self.frame % self.DAMAGE_EVERY == 0:
             self.opponent.take_damage(self.DAMAGE, 0, 'magical', 1)
