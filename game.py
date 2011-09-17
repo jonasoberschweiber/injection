@@ -46,21 +46,40 @@ class Game:
         if self.ignore_keys:
             return
 
+        # Fighter 1
         if e.key == pygame.K_RIGHT:
-            self.f.right()
+            self.fighter1.right()
         elif e.key == pygame.K_LEFT:
-            self.f.left()
+            self.fighter1.left()
         elif e.key == pygame.K_DOWN:
-            self.f.block()
-        elif e.key == pygame.K_SPACE:
-            self.f.jump()
-        elif e.unicode == 'm':
-            self.f.punch()
-        elif e.unicode == 'n':
-            self.f.kick()
+            self.fighter1.block()
+        elif e.key == pygame.K_RSHIFT:
+            self.fighter1.jump()
+        elif e.key == pygame.K_SLASH:
+            self.fighter1.punch()
+        elif e.key == pygame.K_PERIOD:
+            self.fighter1.kick()
         elif e.key == pygame.K_UP:
-            if self.f.current_injection < len(self.f.injections) - 1:
-                self.f.switch_to_injection(self.f.current_injection + 1)
+            if self.fighter1.current_injection < len(self.fighter1.injections) - 1:
+                self.fighter1.switch_to_injection(self.fighter1.current_injection + 1)
+
+        # Fighter 2
+        elif e.key == pygame.K_d:
+            self.fighter2.right()
+        elif e.key == pygame.K_a:
+            self.fighter2.left()
+        elif e.key == pygame.K_s:
+            self.fighter2.block()
+        elif e.key == pygame.K_j:
+            self.fighter2.jump()
+        elif e.key == pygame.K_h:
+            self.fighter2.punch()
+        elif e.key == pygame.K_g:
+            self.fighter2.kick()
+        elif e.key == pygame.K_w:
+            if self.fighter2.current_injection < len(self.fighter2.injections) - 1:
+                self.fighter2.switch_to_injection(self.fighter2.current_injection + 1)
+
         elif e.unicode == 's':
             if self.f == self.fighter1:
                 self.f = self.fighter2
@@ -73,10 +92,18 @@ class Game:
         if self.ignore_keys:
             return
 
+        # Fighter 1
         if e.key == pygame.K_LEFT:
-            self.f.stop_left()
+            self.fighter1.stop_left()
         elif e.key == pygame.K_RIGHT:
-            self.f.stop_right()
+            self.fighter1.stop_right()
+
+        # Fighter2
+        elif e.key == pygame.K_a:
+            self.fighter2.stop_left()
+        elif e.key == pygame.K_d:
+            self.fighter2.stop_right()
+
 
     def opponent(self, caller):
         opp = self.fighter2

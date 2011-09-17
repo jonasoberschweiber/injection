@@ -202,17 +202,17 @@ class Fighter(pygame.sprite.Sprite):
             self.jump_count = 0
 
     def punch(self):
+        self.register_keypress('punch')
         if self.active():
             return
-        self.register_keypress('punch')
         self.punching = True
         self.anim_frame = 0
         self.punch_sound.play()
     
     def kick(self):
+        self.register_keypress('kick')
         if self.active():
             return
-        self.register_keypress('kick')
         self.kicking = True
         self.anim_frame = 0
         self.kick_sound.play()

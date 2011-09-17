@@ -50,7 +50,7 @@ class MainMenu:
         self.m.current_menu = 2
             
     def btn_multiplayer(self):
-        self.m.active = False
+        self.m.current_menu = 2
 
     def btn_help(self):
         self.m.current_menu = 1
@@ -153,6 +153,7 @@ class InjectionMenu:
             self.player2_mutations= self.player2_mutations[:-1]
 
     def key_press(self, key):
+        # Fighter 1
         if key == pygame.K_LEFT:
             self.selection_left(player=1)
         elif key == pygame.K_RIGHT:
@@ -161,12 +162,28 @@ class InjectionMenu:
             self.selection_up(player=1)
         elif key == pygame.K_DOWN:
             self.selection_down(player=1)
-        elif key == pygame.K_RETURN or key == pygame.K_SPACE:
+        elif key == pygame.K_RSHIFT:
             if len(self.player1_mutations) < 6:
                 self.add_mutation(player=1)
             self.check_state()
-        elif key == pygame.K_BACKSPACE:
+        elif key == pygame.K_SLASH:
             self.delete_mutation(player=1)
+
+        # Fighter 2
+        elif key == pygame.K_a:
+            self.selection_left(player=2)
+        elif key == pygame.K_d:
+            self.selection_right(player=2)
+        elif key == pygame.K_w:
+            self.selection_up(player=2)
+        elif key == pygame.K_s:
+            self.selection_down(player=2)
+        elif key == pygame.K_j:
+            if len(self.player2_mutations) < 6:
+                self.add_mutation(player=2)
+        elif key == pygame.K_h:
+            self.delete_mutation(player=2)
+
         elif key == pygame.K_ESCAPE:
             self.reset()
             self.m.current_menu = 0
@@ -203,7 +220,7 @@ class InjectionMenu:
             else:
                 if i > len(mut) - 1:
                     if i < 6:
-                        self.m.surface.blit(self.available_injections[self.selection1].image_left_inactive, mutrect.move(32*i, 0))
+                        self.m.surface.blit(self.available_injections[sel].image_left_inactive, mutrect.move(32*i, 0))
                     continue
                 self.m.surface.blit(mut[i].image_left, mutrect.move(32*i, 0))
 
@@ -216,24 +233,13 @@ class InjectionMenu:
             if i == self.selection1:
                 if len(self.player1_mutations) < 6:
                     self.m.surface.blit(self.img_selection, self.injections_rect1.move(125*(i%3) - 10, 110*(i/3) - 10))
+            if i == self.selection2:
+                if len(self.player2_mutations) < 6:
+                    self.m.surface.blit(self.img_selection, self.injections_rect2.move(125*(i%3) - 10, 110*(i/3) - 10))
         
+        self.render_mutations(self.player1_mutations, self.player1_mutationsrect, self.selection1)
         self.render_mutations(self.player2_mutations, self.player2_mutationsrect, self.selection2)
 
-        for i in range(0, len(self.player1_mutations) + 1):
-            if i % 2:
-                if i > len(self.player1_mutations) - 1:
-                    self.m.surface.blit(self.available_injections[self.selection1].image_right_inactive, self.player1_mutationsrect.move(32*i, 0))
-                    self.m.surface.blit(self.img_mut_separator, self.player1_mutationsrect.move(32*i - 1, 0))
-                    continue
-                self.m.surface.blit(self.player1_mutations[i].image_right, self.player1_mutationsrect.move(32*i, 0))
-                self.m.surface.blit(self.img_mut_separator, self.player1_mutationsrect.move(32*i - 1, 0))
-            else:
-                if i > len(self.player1_mutations) - 1:
-                    if i < 6:
-                        self.m.surface.blit(self.available_injections[self.selection1].image_left_inactive, self.player1_mutationsrect.move(32*i, 0))
-                    continue
-                self.m.surface.blit(self.player1_mutations[i].image_left, self.player1_mutationsrect.move(32*i, 0))
-                
         self.m.surface.blit(self.img_avail_inj, self.player1_avail_injrect)
         self.m.surface.blit(self.img_avail_inj, self.player2_avail_injrect)
         self.m.surface.blit(self.img_your_inj, self.player1_your_injrect)

@@ -83,8 +83,8 @@ class MagicalAffinityMutation(Mutation):
         fighter.game.fireballs.append(Fireball(fighter.game, fighter))
 
     def activated(self, fighter):
-        fighter.register_key_sequence('rightrightpunch', self.fireball)
-        fighter.register_key_sequence('leftleftpunch', self.fireball)
+        fighter.register_key_sequence('rightpunchpunch', self.fireball)
+        fighter.register_key_sequence('leftpunchpunch', self.fireball)
 
     def deactivated(self, fighter):
         fighter.deregister_key_sequence('rightrightpunch')
