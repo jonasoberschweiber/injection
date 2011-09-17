@@ -1,5 +1,5 @@
 {
-	"map": "gfx/fighter.png",
+	"map": "gfx/fighter",
 	"sprites": {
 		"still": { "file": "gfx/still01.png", "index": 0, "offset_y": 69 },
 		"walk01": { "file": "gfx/walk01.png", "index": 1, "offset_y": 69 },

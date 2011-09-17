@@ -32,7 +32,7 @@ class Fighter(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.color = color
-        self.sprite_map = SpriteMap('gfx/fighter.json', filter=util.create_colorizer(self.color))
+        self.sprite_map = SpriteMap('gfx/fighter.json', color=color)
         self.rect = pygame.Rect(startpos[0], startpos[1], 128, 256)
         self.sprite = 'still'
         self.speed_x = 0

@@ -4,15 +4,13 @@ import pygame
 SPRITES_PER_ROW = 10
 
 class SpriteMap:
-    def __init__(self, property_file, width=128, height=256, filter=None):
+    def __init__(self, property_file, width=128, height=256, color='r'):
         self.width = width
         self.height = height
         self.flipped = False
         self.properties = json.loads(open(property_file).read()) 
-        if filter != None:
-            self.map = filter(pygame.image.load(self.properties['map']).convert_alpha())
-        else:
-            self.map = pygame.image.load(self.properties['map']).convert_alpha()
+        path = '%s_%s.png' % (self.properties['map'], color)
+        self.map = pygame.image.load(path).convert_alpha()
         self.build_flipped_map()
         self.build_masks()
         self.build_hit_boxes()
