@@ -3,9 +3,6 @@ import random
 from fighter import Fighter
 
 class FightingAi:
-    # TODO: 
-    # * When injections are implemented: the AI needs to know about them.
-
     MOVE_TOWARDS_OPPONENT = 0
     MOVING_LEFT = 2
     MOVING_RIGHT = 3
@@ -21,6 +18,10 @@ class FightingAi:
 
     PROB_FIREBALL = .1
     PROB_FIREBALL_SUCCESS = .05
+
+    PROB_SWIFT_FEET = .1
+
+    PROB_BLOCK = .25
 
     def __init__(self, game, fighter):
         self.fighter = fighter
@@ -102,6 +103,12 @@ class FightingAi:
             self.fighter.right()
         if self.opponent.rect.y - self.fighter.rect.y < 20:
             self.fighter.jump()
+    
+    def apply_swift_feet(self):
+    	if self.fighter.speed_multi <= 1 and 'swiftfeet' in self.fighter.mutation_names():
+    		r = random.randint(0, 100)
+    		if r <= self.PROB_SWIFT_FEET * 100:
+    			self.fighter.simulate_key_sequence(['left', 'left'])
 
     def moving_left(self):
         dist = self.distance_to_opponent()
@@ -110,6 +117,7 @@ class FightingAi:
             self.fighter.stop_left()
             self.state = self.ATTACK_OPPONENT
             return
+        self.apply_swift_feet()
         if dist > 0:
             if self.reaction_time == 0:
                 print 'stop left (4)'
@@ -130,6 +138,7 @@ class FightingAi:
             self.fighter.stop_right()
             self.state = self.ATTACK_OPPONENT
             return
+        self.apply_swift_feet()
         if dist < 0:
             if self.reaction_time == 0:
                 print 'stop right (7)'
@@ -156,6 +165,10 @@ class FightingAi:
             else:
                 self.reaction_time -= 1
             return
+        if self.opponent.kicking or self.opponent.punching:
+        	r = random.randint(0, 100)
+        	if r <= self.PROB_BLOCK * 100:
+        		self.fighter.block()
         r = random.randint(0, 100)
         if r <= self.PROB_EVADE * 100:
             self.state = self.EVADE
@@ -168,6 +181,7 @@ class FightingAi:
     
     def evade(self):
         dist = self.distance_to_opponent()
+        self.apply_swift_feet()
         if self.evasion_frames == -1:
             if dist < 0:
                 print 'move left (9)'

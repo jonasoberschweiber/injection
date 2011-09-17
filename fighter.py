@@ -307,6 +307,9 @@ class Fighter(pygame.sprite.Sprite):
             if self.looking_right:
                 self.sprite_map.flip()
                 self.looking_right = False
+    
+    def mutation_names(self):
+        return [mut.name for mut in self.injections[self.current_injection] if mut != None]
 
     def register_keypress(self, key):
         if self.sequence_frame < SEQUENCE_LIMIT:
@@ -329,4 +332,8 @@ class Fighter(pygame.sprite.Sprite):
     def deregister_key_sequence(self, sequence):
         if self.sequence_listeners.has_key(sequence):
             self.sequence_listeners.pop(sequence)
+    
+    def simulate_key_sequence(self, sequence):
+        for p in sequence:
+            self.register_keypress(p)
 
