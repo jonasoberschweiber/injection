@@ -24,7 +24,7 @@ SEQUENCE_LIMIT = 5
 
 MAX_HEALTH = 1000
 
-BLOCK_DURATION = 8
+BLOCK_DURATION = 10
 BLOCK_DELAY = 30
 
 class Fighter(pygame.sprite.Sprite):
