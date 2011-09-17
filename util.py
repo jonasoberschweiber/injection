@@ -11,7 +11,7 @@ def colorize_image(image, color):
     arr = pygame.PixelArray(image)
     for x in range(0, image.get_width()):
     	for y in range(0, image.get_height()):
-    		if arr[x][y] > 0x11111111:
+    		if arr[x][y] > 0:
     			ratio = max(1, arr[x][y] >> 24) / 255.0
     			arr[x][y] = pygame.Color(int(color.r * ratio), int(color.g * ratio), 
     									 int(color.b * ratio), int(color.a * ratio))
