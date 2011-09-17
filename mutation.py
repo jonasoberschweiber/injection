@@ -62,6 +62,8 @@ class SwiftFeetMutation(Mutation):
             fighter.update_callbacks.remove(self.update)
         fighter.deregister_key_sequence('rightright')
         fighter.deregister_key_sequence('leftleft')
+        if self.frame >= 0:
+            self.deswift(fighter)
 
 class HundredPercentMoreSpeedMutation(Mutation):
     def __init__(self):
