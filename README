@@ -1,0 +1,17 @@
+INJECTION
+
+Written by Robin Oberschweiber and Jonas Oberschweiber for pyweek 13.
+Graphics by Robin Oberschweiber and Jonas Oberschweiber.
+Sounds taken from 
+Uses the Intuitive font from http://openfontlibrary.org/font/intuitive
+
+Licensed under a three clause BSD license.
+
+You shouldn't need anything but a moderately recent version of Python (we develop on 2.6)
+and pygame.
+
+Just run game.py:
+
+    python game.py
+
+That should be all!
