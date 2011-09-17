@@ -98,10 +98,29 @@ class Game:
         return False
 
     def game_over(self):
-        print "GAME OVER"
+        if self.fighter1.wins > self.fighter2.wins:
+            gameover_image = pygame.image.load("gfx/player1won.png")
+        else:
+            gameover_image = pygame.image.load("gfx/player2won.png")
+
+        self.surface.blit(gameover_image, (330, 140))
+        self.roundcounter.render(self.surface)
+        pygame.display.flip()
+        while True:
+            for e in pygame.event.get():
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_RETURN:
+                        self.roundcounter.round = -1
+                        self.fighter1.wins = 0
+                        self.fighter2.wins = 0
+                        self.menu.activate()
+                        return
 
     def next_round(self):
         if self.roundcounter.round < len(self.roundcounter.rounds) - 1:
+            if self.fighter1.wins == 2 or self.fighter2.wins == 2:
+                self.game_over()
+                return
             self.fighter1.reset()
             self.fighter2.reset()
             self.ai.reset()

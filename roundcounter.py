@@ -13,11 +13,25 @@ class RoundCounter:
         self.rect = rect
         self.animation_frame = 0
 
+        self.img_wins = pygame.image.load("gfx/wins.png").convert_alpha()
+        self.img_win_circle = pygame.image.load("gfx/win_circle.png").convert_alpha()
+        self.win_color = pygame.Color(200, 20, 20)
+        self.wins_rect1 = pygame.Rect(295, 58, 0, 0)
+        self.wins_rect2 = pygame.Rect(958, 58, 0, 0)
+
     def render(self, surface):
         n = self.round
         if self.round > len(self.rounds) - 1:
             n = 0
         surface.blit(self.rounds[n], self.rect)
+        surface.blit(self.img_wins, self.wins_rect1)
+        surface.blit(self.img_wins, self.wins_rect2)
+        for i in range(0, self.game.fighter1.wins):
+            #pygame.draw.circle(surface, self.win_color, (self.wins_rect1.left + i*20, self.wins_rect1.top + 20), 4)
+            surface.blit(self.img_win_circle, (self.wins_rect1.left + i*12, self.wins_rect1.top + 13))
+        for i in range(0, self.game.fighter2.wins):
+            #pygame.draw.circle(surface, self.win_color, (self.wins_rect2.left + i*20, self.wins_rect2.top + 20), 4)
+            surface.blit(self.img_win_circle, (self.wins_rect2.left + i*12, self.wins_rect2.top + 13))
 
         if self.animation_frame > 0:
             if self.animation_frame < 50:
