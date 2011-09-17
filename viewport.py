@@ -18,11 +18,11 @@ class Viewport:
 
         d = abs(new_caller_rect.x - opponent.rect.x)
         if d >= (1024 - 128):
-            if caller.rect.x > opponent.rect.x:
+            if caller.rect.x > opponent.rect.x and caller.speed_x > 0:
                 return False
-            elif caller.rect.x < opponent.rect.x:
+            elif caller.rect.x < opponent.rect.x and caller.speed_x < 0:
                 return False
 
         if self.real_rect(new_caller_rect).left < 0 or self.real_rect(new_caller_rect).right > 1024:
-            self.offset += caller.speed_x
+            self.offset += new_caller_rect.x - caller.rect.x
         return True
