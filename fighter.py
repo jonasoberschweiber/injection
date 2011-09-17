@@ -1,6 +1,7 @@
 import math
 import pygame
 import util
+import random
 
 from spritemap import SpriteMap
 from fireball import Fireball
@@ -102,6 +103,15 @@ class Fighter(pygame.sprite.Sprite):
         if off != 0:
             rect = pygame.Rect(rect.x, rect.y, rect.w, rect.h)
         surface.blit(self.sprite_map.image(), rect, area=self.sprite_map.sprite_rect(self.sprite))
+
+    def randomize_injections(self):
+        possible_injections = [lambda: mutation.WingsMutation(), lambda: mutation.HardenedSkinMutation(),
+                               lambda: mutation.SwiftFeetMutation(), lambda: mutation.TranquilityMutation(),
+                               lambda: mutation.MagicalAffinityMutation(), lambda: mutation.ToxicMutation(),
+                               lambda: mutation.StrengthMutation()]
+        self.injections = [(possible_injections[random.randint(0, len(possible_injections) - 1)](),
+                            possible_injections[random.randint(0, len(possible_injections) - 1)](), None)
+                           for i in range(0, 3)]
 
     def mask(self):
         return self.sprite_map.mask(self.sprite)

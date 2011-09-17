@@ -3,8 +3,9 @@ import pygame
 from mutation import *
 
 class MainMenu:
-    def __init__(self, m):
+    def __init__(self, m, game=None):
         self.m = m
+        self.game = game
         self.img_title = pygame.image.load("gfx/menu_title.png").convert_alpha()
         self.img_singleplayer = (pygame.image.load("gfx/btn_singleplayer.png").convert_alpha(), pygame.image.load("gfx/btn_singleplayer_inactive.png").convert_alpha())
         self.img_multiplayer = (pygame.image.load("gfx/btn_multiplayer.png").convert_alpha(), pygame.image.load("gfx/btn_multiplayer_inactive.png").convert_alpha())
@@ -27,6 +28,9 @@ class MainMenu:
                 self.current_button -= 1
         elif key == pygame.K_RETURN or key == pygame.K_SPACE or key == pygame.K_RIGHT:
             self.buttons[self.current_button][1]()
+    
+    def reset(self):
+        pass
 
     def render(self):
         self.m.surface.fill(pygame.Color(255, 255, 255))
@@ -38,6 +42,7 @@ class MainMenu:
                 self.m.surface.blit(self.buttons[i][0][1], self.rect.move(0, i*70))
 
     def btn_singleplayer(self):
+        self.game.fighter2.randomize_injections()
         self.m.current_menu = 2
             
     def btn_multiplayer(self):
@@ -54,6 +59,9 @@ class HelpMenu:
         self.m = m
         self.help_image = pygame.image.load("gfx/instructions.png").convert_alpha()
         self.rect = self.help_image.get_rect()
+    
+    def reset(self):
+        pass
 
     def key_press(self, key):
         if key == pygame.K_DOWN:
@@ -70,8 +78,9 @@ class HelpMenu:
         self.m.surface.blit(self.help_image, self.rect)
 
 class InjectionMenu:
-    def __init__(self, m):
+    def __init__(self, m, game=None):
         self.m = m
+        self.game = game
         self.available_injections = [SwiftFeetMutation(), HardenedSkinMutation(), StrengthMutation(), 
                                      MagicalAffinityMutation(), WingsMutation(), TranquilityMutation(), 
                                      ToxicMutation()]
@@ -161,6 +170,9 @@ class InjectionMenu:
     def reset(self):
         self.player1_mutations = []
         self.player2_mutations = []
+        for m in self.game.fighter2.injections:
+            self.player2_mutations.append(m[0])
+            self.player2_mutations.append(m[1])
         self.selection1 = 0
         self.selection2 = 0
 
@@ -174,6 +186,23 @@ class InjectionMenu:
                 else:
                     tmp_mutation = self.player1_mutations[i]
             self.m.start_game()
+    
+    def render_mutations(self, mut, mutrect, sel):
+        for i in range(0, len(mut) + 1):
+            if i % 2:
+                if i > len(mut) - 1:
+                    self.m.surface.blit(self.available_injections[sel].image_right_inactive, mutrect.move(32*i, 0))
+                    self.m.surface.blit(self.img_mut_separator, mutrect.move(32*i - 1, 0))
+                    continue
+                self.m.surface.blit(mut[i].image_right, mutrect.move(32*i, 0))
+                self.m.surface.blit(self.img_mut_separator, mutrect.move(32*i - 1, 0))
+            else:
+                if i > len(mut) - 1:
+                    if i < 6:
+                        self.m.surface.blit(self.available_injections[self.selection1].image_left_inactive, mutrect.move(32*i, 0))
+                    continue
+                self.m.surface.blit(mut[i].image_left, mutrect.move(32*i, 0))
+
 
     def render(self):
         self.m.surface.fill(pygame.Color(255, 255, 255))
@@ -183,6 +212,8 @@ class InjectionMenu:
             if i == self.selection1:
                 if len(self.player1_mutations) < 6:
                     self.m.surface.blit(self.img_selection, self.injections_rect1.move(125*(i%3) - 10, 110*(i/3) - 10))
+        
+        self.render_mutations(self.player2_mutations, self.player2_mutationsrect, self.selection2)
 
         for i in range(0, len(self.player1_mutations) + 1):
             if i % 2:
@@ -213,12 +244,17 @@ class Menu:
     def __init__(self, game):
         self.game = game
         self.active = True
-        self.menus = [MainMenu(self), HelpMenu(self), InjectionMenu(self)]
+        self.menus = [MainMenu(self, game), HelpMenu(self), InjectionMenu(self, game)]
         self.current_menu = 0
         self.surface = pygame.display.get_surface()
 
     def key_press(self, key):
         self.menus[self.current_menu].key_press(key)
+    
+    def __setattr__(self, name, value):
+        self.__dict__[name] = value
+        if name == 'current_menu':
+            self.menus[self.current_menu].reset()
 
     def loop(self):
         pygame.key.set_repeat(200, 30)
