@@ -32,6 +32,7 @@ class Game:
         self.ai = FightingAi(self, self.fighter2)
         self.menu = Menu(self)
         self.ignore_keys = False
+        self.multiplayer = 0
 
         self.fireballs = []
         pygame.mixer.music.load("snd/music.wav")
@@ -46,63 +47,64 @@ class Game:
         if self.ignore_keys:
             return
 
+        # Fighter 2
+        if self.multiplayer:
+            if e.key == pygame.K_RIGHT:
+                self.fighter2.right()
+            elif e.key == pygame.K_LEFT:
+                self.fighter2.left()
+            elif e.key == pygame.K_DOWN:
+                self.fighter2.block()
+            elif e.key == pygame.K_RSHIFT:
+                self.fighter2.jump()
+            elif e.key == pygame.K_SLASH:
+                self.fighter2.punch()
+            elif e.key == pygame.K_PERIOD:
+                self.fighter2.kick()
+            elif e.key == pygame.K_UP:
+                if self.fighter2.current_injection < len(self.fighter2.injections) - 1:
+                    self.fighter2.switch_to_injection(self.fighter2.current_injection + 1)
+
         # Fighter 1
-        if e.key == pygame.K_RIGHT:
+        if e.key == pygame.K_d:
             self.fighter1.right()
-        elif e.key == pygame.K_LEFT:
+        elif e.key == pygame.K_a:
             self.fighter1.left()
-        elif e.key == pygame.K_DOWN:
+        elif e.key == pygame.K_s:
             self.fighter1.block()
-        elif e.key == pygame.K_RSHIFT:
+        elif e.key == pygame.K_j:
             self.fighter1.jump()
-        elif e.key == pygame.K_SLASH:
+        elif e.key == pygame.K_h:
             self.fighter1.punch()
-        elif e.key == pygame.K_PERIOD:
+        elif e.key == pygame.K_g:
             self.fighter1.kick()
-        elif e.key == pygame.K_UP:
+        elif e.key == pygame.K_w:
             if self.fighter1.current_injection < len(self.fighter1.injections) - 1:
                 self.fighter1.switch_to_injection(self.fighter1.current_injection + 1)
 
-        # Fighter 2
-        elif e.key == pygame.K_d:
-            self.fighter2.right()
-        elif e.key == pygame.K_a:
-            self.fighter2.left()
-        elif e.key == pygame.K_s:
-            self.fighter2.block()
-        elif e.key == pygame.K_j:
-            self.fighter2.jump()
-        elif e.key == pygame.K_h:
-            self.fighter2.punch()
-        elif e.key == pygame.K_g:
-            self.fighter2.kick()
-        elif e.key == pygame.K_w:
-            if self.fighter2.current_injection < len(self.fighter2.injections) - 1:
-                self.fighter2.switch_to_injection(self.fighter2.current_injection + 1)
-
-        elif e.unicode == 's':
-            if self.f == self.fighter1:
-                self.f = self.fighter2
-            else:
-                self.f = self.fighter1
-        elif e.unicode == 'q':
-            sys.exit()
-
+        elif e.key == pygame.K_ESCAPE:
+            self.menu.current_menu = 0
+            self.menu.active = 1
+            self.roundcounter.round = -1
+            self.fighter1.wins = 0
+            self.fighter2.wins = 0
+ 
     def ev_keyup(self, e):
         if self.ignore_keys:
             return
 
-        # Fighter 1
-        if e.key == pygame.K_LEFT:
-            self.fighter1.stop_left()
-        elif e.key == pygame.K_RIGHT:
-            self.fighter1.stop_right()
+        # Fighter 2
+        if self.multiplayer:
+            if e.key == pygame.K_LEFT:
+                self.fighter2.stop_left()
+            elif e.key == pygame.K_RIGHT:
+                self.fighter2.stop_right()
 
-        # Fighter2
-        elif e.key == pygame.K_a:
-            self.fighter2.stop_left()
+        # Fighter 1
+        if e.key == pygame.K_a:
+            self.fighter1.stop_left()
         elif e.key == pygame.K_d:
-            self.fighter2.stop_right()
+            self.fighter1.stop_right()
 
 
     def opponent(self, caller):
@@ -198,7 +200,7 @@ class Game:
             self.injectionsbar1.render(self.surface)
             self.injectionsbar2.render(self.surface)
             self.roundcounter.render(self.surface)
-            if not self.ignore_keys:
+            if not self.ignore_keys and not self.multiplayer:
                 self.ai.update()
 
             for f in self.fireballs:

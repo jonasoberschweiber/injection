@@ -24,6 +24,7 @@ class SwiftFeetMutation(Mutation):
 
     def __init__(self):
         Mutation.__init__(self, "swiftfeet")
+        self.frame = 0
     
     def swift(self, fighter):
         self.count += 1

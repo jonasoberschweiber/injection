@@ -50,7 +50,7 @@ class MainMenu:
         self.m.current_menu = 2
             
     def btn_multiplayer(self):
-        self.m.current_menu = 2
+        self.m.current_menu = 3
 
     def btn_help(self):
         self.m.current_menu = 1
@@ -82,7 +82,7 @@ class HelpMenu:
         self.m.surface.blit(self.help_image, self.rect)
 
 class InjectionMenu:
-    def __init__(self, m, game=None):
+    def __init__(self, m, game=None, multiplayer=0):
         self.m = m
         self.game = game
         self.available_injections = [SwiftFeetMutation(), HardenedSkinMutation(), StrengthMutation(), 
@@ -107,6 +107,7 @@ class InjectionMenu:
         self.player2_your_injrect = pygame.Rect(565, 500, 0, 0)
         self.player1_readyrect = pygame.Rect(50, 635, 0, 0)
         self.player2_readyrect = pygame.Rect(565, 635, 0, 0)
+        self.multiplayer = multiplayer
 
     def selection_left(self, player=1):
         if player == 1:
@@ -153,36 +154,37 @@ class InjectionMenu:
             self.player2_mutations= self.player2_mutations[:-1]
 
     def key_press(self, key):
-        # Fighter 1
+        # Fighter 2
         if key == pygame.K_LEFT:
-            self.selection_left(player=1)
+            self.selection_left(player=2)
         elif key == pygame.K_RIGHT:
-            self.selection_right(player=1)
+            self.selection_right(player=2)
         elif key == pygame.K_UP:
-            self.selection_up(player=1)
+            self.selection_up(player=2)
         elif key == pygame.K_DOWN:
-            self.selection_down(player=1)
+            self.selection_down(player=2)
         elif key == pygame.K_RSHIFT:
             if len(self.player1_mutations) < 6:
-                self.add_mutation(player=1)
+                self.add_mutation(player=2)
             self.check_state()
         elif key == pygame.K_SLASH:
-            self.delete_mutation(player=1)
+            self.delete_mutation(player=2)
 
-        # Fighter 2
+        # Fighter 1
         elif key == pygame.K_a:
-            self.selection_left(player=2)
+            self.selection_left(player=1)
         elif key == pygame.K_d:
-            self.selection_right(player=2)
+            self.selection_right(player=1)
         elif key == pygame.K_w:
-            self.selection_up(player=2)
+            self.selection_up(player=1)
         elif key == pygame.K_s:
-            self.selection_down(player=2)
+            self.selection_down(player=1)
         elif key == pygame.K_j:
             if len(self.player2_mutations) < 6:
-                self.add_mutation(player=2)
+                self.add_mutation(player=1)
+            self.check_state()
         elif key == pygame.K_h:
-            self.delete_mutation(player=2)
+            self.delete_mutation(player=1)
 
         elif key == pygame.K_ESCAPE:
             self.reset()
@@ -191,21 +193,31 @@ class InjectionMenu:
     def reset(self):
         self.player1_mutations = []
         self.player2_mutations = []
-        for m in self.game.fighter2.injections:
-            self.player2_mutations.append(m[0])
-            self.player2_mutations.append(m[1])
+        if not self.multiplayer:
+            for m in self.game.fighter2.injections:
+                self.player2_mutations.append(m[0])
+                self.player2_mutations.append(m[1])
         self.selection1 = 0
         self.selection2 = 0
 
     def check_state(self):
-        if len(self.player1_mutations) == 6:
+        print len(self.player2_mutations)
+        if len(self.player1_mutations) == 6 and len(self.player2_mutations) == 6:
             self.m.game.fighter1.injections = []
-            #self.m.game.fighter2.injections = []
             for i in range(0, len(self.player1_mutations)):
                 if i % 2:
                     self.m.game.fighter1.injections.append((tmp_mutation, self.player1_mutations[i], None))
                 else:
                     tmp_mutation = self.player1_mutations[i]
+            if self.multiplayer:
+                self.m.game.fighter2.injections = []
+                for i in range(0, len(self.player2_mutations)):
+                    if i % 2:
+                        self.m.game.fighter2.injections.append((tmp_mutation, self.player2_mutations[i], None))
+                    else:
+                        tmp_mutation = self.player2_mutations[i]
+    
+            self.m.game.multiplayer = self.multiplayer
             self.m.start_game()
     
     def render_mutations(self, mut, mutrect, sel):
@@ -254,7 +266,7 @@ class Menu:
     def __init__(self, game):
         self.game = game
         self.active = True
-        self.menus = [MainMenu(self, game), HelpMenu(self), InjectionMenu(self, game)]
+        self.menus = [MainMenu(self, game), HelpMenu(self), InjectionMenu(self, game), InjectionMenu(self, game, 1)]
         self.current_menu = 0
         self.surface = pygame.display.get_surface()
 
