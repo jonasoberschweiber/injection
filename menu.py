@@ -52,7 +52,7 @@ class MainMenu:
 class HelpMenu:
     def __init__(self, m):
         self.m = m
-        self.help_image = pygame.image.load("gfx/injections.png").convert_alpha()
+        self.help_image = pygame.image.load("gfx/instructions.png").convert_alpha()
         self.rect = self.help_image.get_rect()
 
     def key_press(self, key):
@@ -62,7 +62,7 @@ class HelpMenu:
         elif key == pygame.K_UP:
             if self.rect.top < 0:
                 self.rect = self.rect.move(0, 40)
-        elif key == pygame.K_LEFT or key == pygame.K_RETURN or key == pygame.K_SPACE:
+        elif key in [pygame.K_LEFT, pygame.K_SPACE, pygame.K_ESCAPE]:
             self.m.current_menu = 0
 
     def render(self):
