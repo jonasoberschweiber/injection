@@ -95,6 +95,7 @@ class InjectionMenu:
         self.img_ready = pygame.image.load("gfx/injmenu/ready.png").convert_alpha()
         self.img_selection = pygame.image.load("gfx/injmenu/selection.png").convert_alpha()
         self.img_mut_separator = pygame.image.load("gfx/mutation_separator.png").convert_alpha()
+        self.img_keys = pygame.image.load("gfx/injmenu/keys.png").convert_alpha()
         self.injections_rect1 = pygame.Rect(50, 130, 0, 0)
         self.injections_rect2 = pygame.Rect(565, 130, 0, 0)
         self.player1_mutations = []
@@ -107,6 +108,7 @@ class InjectionMenu:
         self.player2_your_injrect = pygame.Rect(565, 500, 0, 0)
         self.player1_readyrect = pygame.Rect(50, 635, 0, 0)
         self.player2_readyrect = pygame.Rect(565, 635, 0, 0)
+        self.keys_rect = pygame.Rect(337, 685, 0, 0)
         self.multiplayer = multiplayer
 
     def selection_left(self, player=1):
@@ -155,23 +157,24 @@ class InjectionMenu:
 
     def key_press(self, key):
         # Fighter 2
-        if key == pygame.K_LEFT:
-            self.selection_left(player=2)
-        elif key == pygame.K_RIGHT:
-            self.selection_right(player=2)
-        elif key == pygame.K_UP:
-            self.selection_up(player=2)
-        elif key == pygame.K_DOWN:
-            self.selection_down(player=2)
-        elif key == pygame.K_RSHIFT:
-            if len(self.player1_mutations) < 6:
-                self.add_mutation(player=2)
-            self.check_state()
-        elif key == pygame.K_SLASH:
-            self.delete_mutation(player=2)
+        if self.multiplayer:
+            if key == pygame.K_LEFT:
+                self.selection_left(player=2)
+            elif key == pygame.K_RIGHT:
+                self.selection_right(player=2)
+            elif key == pygame.K_UP:
+                self.selection_up(player=2)
+            elif key == pygame.K_DOWN:
+                self.selection_down(player=2)
+            elif key == pygame.K_SLASH:
+                if len(self.player2_mutations) < 6:
+                    self.add_mutation(player=2)
+                self.check_state()
+            elif key == pygame.K_PERIOD:
+                self.delete_mutation(player=2)
 
         # Fighter 1
-        elif key == pygame.K_a:
+        if key == pygame.K_a:
             self.selection_left(player=1)
         elif key == pygame.K_d:
             self.selection_right(player=1)
@@ -180,7 +183,7 @@ class InjectionMenu:
         elif key == pygame.K_s:
             self.selection_down(player=1)
         elif key == pygame.K_j:
-            if len(self.player2_mutations) < 6:
+            if len(self.player1_mutations) < 6:
                 self.add_mutation(player=1)
             self.check_state()
         elif key == pygame.K_h:
@@ -256,6 +259,7 @@ class InjectionMenu:
         self.m.surface.blit(self.img_avail_inj, self.player2_avail_injrect)
         self.m.surface.blit(self.img_your_inj, self.player1_your_injrect)
         self.m.surface.blit(self.img_your_inj, self.player2_your_injrect)
+        self.m.surface.blit(self.img_keys, self.keys_rect)
         if len(self.player1_mutations) == 6:
             self.m.surface.blit(self.img_ready, self.player1_readyrect)
         if len(self.player2_mutations) == 6:

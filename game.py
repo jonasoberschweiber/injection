@@ -55,11 +55,11 @@ class Game:
                 self.fighter2.left()
             elif e.key == pygame.K_DOWN:
                 self.fighter2.block()
-            elif e.key == pygame.K_RSHIFT:
-                self.fighter2.jump()
             elif e.key == pygame.K_SLASH:
-                self.fighter2.punch()
+                self.fighter2.jump()
             elif e.key == pygame.K_PERIOD:
+                self.fighter2.punch()
+            elif e.key == pygame.K_COMMA:
                 self.fighter2.kick()
             elif e.key == pygame.K_UP:
                 if self.fighter2.current_injection < len(self.fighter2.injections) - 1:
