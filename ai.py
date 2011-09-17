@@ -77,6 +77,7 @@ class FightingAi:
     def update(self):
         #print self.state_names[self.state], self.distance_to_opponent()
         self.state_handlers[self.state]()
+        self.evade_fireball()
 
         r = random.randint(0, 100)
         if r <= self.PROB_FIREBALL * 100 and 'magicalaffinity' in self.fighter.injection_names():
@@ -109,6 +110,15 @@ class FightingAi:
     		r = random.randint(0, 100)
     		if r <= self.PROB_SWIFT_FEET * 100:
     			self.fighter.simulate_key_sequence(['left', 'left'])
+    
+    def evade_fireball(self):
+    	if not 'wings' in self.fighter.mutation_names():
+    		return
+    	if self.fighter.jump_count > 0 and self.fighter.jump_frame >= 4:
+    		self.fighter.jump()
+    	for f in self.game.fireballs:
+    		if abs(f.pos[0] - self.fighter.rect.x) < 40:
+    			self.fighter.jump()
 
     def moving_left(self):
         dist = self.distance_to_opponent()

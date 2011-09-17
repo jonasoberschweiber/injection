@@ -64,7 +64,7 @@ class Fighter(pygame.sprite.Sprite):
         self.update_callbacks = []
         self.damage_veto_callbacks = []
 
-        self.injections = [(mutation.MagicalAffinityMutation(), mutation.HardenedSkinMutation(), None),
+        self.injections = [(mutation.WingsMutation(), mutation.HardenedSkinMutation(), None),
                            (mutation.WingsMutation(), mutation.SwiftFeetMutation(), None), 
                            (mutation.StrengthMutation(), mutation.ToxicMutation(), None)]
         self.current_injection = -1 
